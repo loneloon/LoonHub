@@ -15,7 +15,7 @@ for att in strip_atts:
     text = text.replace(att, '')
 
 print(stripper.cut(text, data_cues.FullName.start, data_cues.FullName.end))
-print(stripper.cut(text, data_cues.Email.start, data_cues.Email.end))
+#print(stripper.cut(text, data_cues.Email.start, data_cues.Email.end))
 #print(stripper.cut(text, data_cues.DoB.start, data_cues.DoB.end))
 #print(stripper.cut(text, data_cues.Phone.start, data_cues.Phone.end))
 
