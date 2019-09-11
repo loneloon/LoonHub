@@ -4,9 +4,11 @@ f= open(file_name, "r")
 text = f.read()
 f.close()
 
-target_atts = ['</td></tr><tr><td class="line-number" value=', '<span class="html-tag">', '<span class="html-attribute-name">',
-              '></td><td class="line-content">', '<span class="html-attribute-value">', '<div>', '</div>', '<div', '</div']
+def add_att(attr: str):
+    target_list = []
+    att.append('<' + attr + '>')
 
-for att in strip_atts:
+
+for att in target_list:
     text = text.replace(att, '')
 
