@@ -1,18 +1,22 @@
 class FullName:            # <-- This one works!
-    start = '''"197"            <td></span>'''
-    end = '''</td></span>'''
+    start = '''"197"            '''
+    end = '''"198"'''
 
 class Email:
-    start = '''"202"            <td></span>'''
-    end = '''</td></span>'''
+    start = '''"202"            '''
+    end = '''"203" '''
 
 class DoB:
     start = '''"207"'''
-    end = '''</'''
+    end = '''"208"'''
 
 class Phone:
     start = '''"218"'''
-    end = '''</'''
+    end = '''"219"'''
+
+class Destructibles:
+    list = []
+
 
 # Didn't figure out other classes yet
 
