@@ -17,7 +17,7 @@ def html_killer(page: str):
             each2 = '</' + each + '>'
             target_list.append(each2)
 
-    add_att(['tr', 'head', 'body', 'html', 'head', 'h1', 'table', 'title'])
+    add_att(['tr', 'head', 'body', 'html', 'head', 'h1', 'table', 'title', 'span', 'td', 'th', 'td align="right"', 'a', 'td valign="top"', 'th colspan="5"', 'hr'])
 
     for att in target_list:
         text = text.replace(att, '')
