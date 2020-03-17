@@ -1,0 +1,20 @@
+=09.03.2020=
+
+Recent updates:
+    - Merged keygen into GUI. It works well with the buttons.
+    - Improved folder management -> folder gets wiped out completely even if it has files in it.
+
+Goals up:
+    - Radio buttons should be converted into booleans: Letters: Yes/No, Symbols: Yes/No, etc.
+    - Radio buttons should be implemented into keygen process.
+
+=10.03.2020=
+
+Recent updates:
+    - Radio buttons turned into boolean variables.
+    - Radio buttons integrated into Key generator process.
+    - Letters string expanded with upper case.
+
+Goals up:
+    - Customize GUI with a more suitable anime character - a librarian.
+    - Pack into an .exe file.
