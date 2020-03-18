@@ -66,17 +66,45 @@ class Main:
 
         # Кнопки Login/Register
 
-        def SignIn():
+        def del_message(event=None):
+            root.pass_message.destroy()
+            root.m_box_label.destroy()
+            root.label.configure(image=root.main_lbl)
+
+        class SignInMessageBox:
+            def __init__(self, error):
+                root.m_box_label = tk.Label(root, image=root.m_box, bg='white')
+                root.m_box_label.place(x=-20, y=410)
+                root.m_box_label.lift()
+
+                root.pass_message = tk.Label(root, text=f'{error}',
+                                             background='#fafbf6',
+                                             foreground='#140226', font=('Comic Sans MS', 18), wraplength=400)
+                root.pass_message.configure(width=40)
+                root.pass_message.place(x=80, y=490, width=400)
+
+                root.bind("<Key>", del_message)
+                root.after(4000, del_message)
+
+
+
+        def SignIn(event=None):
             if ul.SignIn(root.login_ent.get(), root.pass_ent.get()).error_message is None:
                 temp = (ul.SignIn(root.login_ent.get(), root.pass_ent.get()).info).copy()
                 recent_position = root.geometry()[7:]
                 root.destroy()
 
                 Profile(recent_position, temp)
+            elif ul.SignIn(root.login_ent.get(), root.pass_ent.get()).error_message is not None:
+                root.label.configure(image=root.main_wrong)
+                SignInMessageBox(ul.SignIn(root.login_ent.get(), root.pass_ent.get()).error_message)
+
 
         root.signin_label = tk.PhotoImage(file='login.png')
         root.signin_bt = tk.Button(image=root.signin_label, bg='#fafbf6', relief='flat', command=SignIn)
         root.signin_bt.place(x=120, y=330)
+
+        root.bind('<Return>', SignIn)
 
         def SwitchToReg():
             recent_position = root.geometry()[7:]

@@ -1,0 +1,16 @@
+=17.03.2020=
+
+	- Reg info verification completed
+	- Log in sequence established
+	- Profile module implemented
+
+	Goals up:
+		- Create unique session signature
+		- Implement Temporary LogIn Memory 
+		- Add edit feature to profile section
+
+
+=18.03.2020=
+
+    - Implemented sign in error response
+    - 'Return' key pressed in sign in mode initiates sign in action.
