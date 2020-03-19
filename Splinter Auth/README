@@ -4,8 +4,11 @@ Description:
 -This program acts as an authentication system that potentially may be attached upfront to any other script or program.
 
 Features:
+-Custom tkinter-based GUI
 -Log in module (which is based on user profile log file (/acc))
 -Basic Registration module with password hashing system
 -User profile review module
 -Error feedback with semi-animated mascot (Splinter, the dog which is displayed in gui).
 
+
+To launch - execute main.py
