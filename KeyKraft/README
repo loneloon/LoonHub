@@ -1,0 +1,25 @@
+=KeyKraft=
+
+Description:
+-This program acts as a customizable unicode key generator with a purpose of creating bruteforce libraries.
+
+Features:
+-Custom tkinter-based GUI
+-'Path' field holds a path to a folder where you are willing to place your key-vault
+-'Length' controls the length of keys which you are willing to generate.
+-'Symbols' switch corresponds to adding/removing ASCII 'printables' to your keys, 'digits' - [0-9],
+    'letters' - lower and uppercase
+-'Build path' Button creates a folder for your keys. If you did not assign a custom path it will create a folder
+    in script's parent directory.
+-'Learn Keys' feature is disabled before you activate 'Build Path' button
+-'Kill path' button as opposed to 'Build path' kills the key folder (empty or not it cascade-deletes it entirely)
+
+!!!ATTENTION!!!
+
+If the length value is above 3-4 the key creation process may take up to an hour or more as it will write every
+possible combination.
+
+Testing on 1-2 symb.-long keys is recommended!
+
+
+To launch - execute main.py
