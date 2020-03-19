@@ -1,0 +1,33 @@
+    Python - Excel formatting:
+
+import xlrd - general parsing
+import xlwt - file creation
+import xlutils - additional utilities
+
+    Opening file:
+
+xls_book = xlrd.open_workbook('example.xls') - to open a file
+file_contents
+encoding_override - to specify the encoding
+formatting_info - boolean (T/F) whether to load up funtions for empty cells or not
+
+    Accessing separate sheets:
+
+sheet = xls_book.sheet_by_index(0)
+
+or
+
+sheet_by_name(sheet_name)
+
+-sheet.nrows - number of rows
+-sheet.ncols - number of columns
+-sheet.row_values(row_num) - returns a list of cell contents from a specific row
+
+    Reformatting date:
+
+xlrd.xldate_as_tuple(xldate, datemode) - returns tuple with date like (year, month, day, hours, minutes, seconds)
+ datemode: 0:1900-based, 1:1904-based - you can also use datemode of the work_book you're editing 
+
+ xlrd.xldate_as_datetime(xldate, datemode) - returns datetime object
+ 
+ 
