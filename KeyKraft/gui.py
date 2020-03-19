@@ -8,6 +8,7 @@ import break_in as bi
 import os
 import keygen as kg
 import string
+from tkinter import filedialog as fd
 
 # Блок основы
 
@@ -22,7 +23,12 @@ root.wm_attributes("-topmost", True)
 root.wm_attributes("-transparentcolor", "white")
 root.label.pack()
 
+
 # Блок адресной строки
+
+def pathbutton():
+    fd_path = fd.askdirectory()
+    root.path.insert(0, fd_path)
 
 root.path_label = tk.Label(root, text='Path', background='#140226', foreground='#a3124a', font=('Arial', 14, 'bold'),
                            relief='flat')
@@ -30,7 +36,11 @@ root.path_label.place(x=38, y=218)
 
 root.path = tk.Entry(root, fg='#140226', background='#a3124a', selectbackground='#140226', selectforeground='#f1f3e7',
                      font='Arial', relief='flat')
-root.path.place(x=90, y=222, width=220, height=21)
+root.path.place(x=90, y=222, width=197, height=21)
+
+root.pathbutton = tk.Button(root, text='...', background='#a3124a', foreground='#140226', activebackground='#f1f3e7', command=pathbutton)
+root.pathbutton.place(x=289, y=222, width=21, height=22)
+
 
 # Блок слайдера
 
