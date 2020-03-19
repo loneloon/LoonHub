@@ -1,0 +1,11 @@
+=Splinter Auth.=
+
+Description:
+-This program acts as an authentification system that potentially may be attached upfront to any other script or program.
+
+Features:
+-Log in module (which is based on user profile log file (/acc))
+-Basic Registration module with password hashing system
+-User profile review module
+-Error feedback with semi-animated mascot (Splinter, the dog which is displayed in gui).
+
