@@ -1,0 +1,54 @@
+# При помощи базы данных Redis решите задачу поиска имени пользователя по электронному адресу и наоборот, 
+поиск электронного адреса пользователя по его имени.
+
+# Поиск эл.адреса по имени 
+
+oem@LoonCub:~/homework$ redis-cli
+127.0.0.1:6379> HMSET "Josh Barrett" email "ken@gmail.com" d.o.b "1986-02-13" occupation "Product manager"
+OK
+127.0.0.1:6379> HMSET "Lily Hatter" email "lil@gmail.no" d.o.b "1993-10-20" occupation "Quality assurance"
+OK
+127.0.0.1:6379> HMSET "Kevin Einstein" email "severed@yahoo.com" d.o.b "1990-03-03" occupation "Assistant manager"
+OK
+127.0.0.1:6379> HGET "Lily Hatter" email
+"lil@gmail.no"
+
+# Поиск имени по эл.адресу. Решил задачу через создание сортированного списка и сопоставления score
+
+127.0.0.1:6379> ZADD username NX 1 "Josh Barrett" 2 "Lily Sands" 3 "Kevin Davis" 
+(integer) 3
+127.0.0.1:6379> ZADD age NX 1 23 2 44 3 36
+(integer) 3
+127.0.0.1:6379> ZADD email NX 1 "jaybee@gmail.com" 2 "lil@gmail.no" 3 "kev@yahoo.com"
+(integer) 3
+127.0.0.1:6379> ZSCAN email 0 MATCH lil@gmail*
+1) "0"
+2) 1) "lil@gmail.no"
+   2) "2"
+127.0.0.1:6379> ZRANGEBYSCORE username 2 2 
+1) "Lily Sands"
+127.0.0.1:6379> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,40 @@
+# В базе данных Redis подберите коллекцию для подсчета посещений с определенных IP-адресов.
+
+oem@LoonCub:~/homework$ redis-cli
+127.0.0.1:6379>
+127.0.0.1:6379> CLIENT LIST
+id=3 addr=172.18.0.1:52138 fd=8 name= age=9790 idle=0 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=26 qbuf-free=32742 obl=0 oll=0 omem=0 events=r cmd=client
+127.0.0.1:6379> MULTI
+OK
+127.0.0.1:6379> ZADD check_list NX 0 172.18.0.1
+QUEUED
+127.0.0.1:6379> ZINCRBY check_list 1 172.18.0.1
+QUEUED
+127.0.0.1:6379> ZRANGEbyscore check_list 0 10 
+QUEUED
+127.0.0.1:6379> Exec
+1) "1"
+2) 1) "172.18.0.1"
+127.0.0.1:6379> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

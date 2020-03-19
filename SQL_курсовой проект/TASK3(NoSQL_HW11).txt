@@ -1,0 +1,56 @@
+# Организуйте хранение категорий и товарных позиций учебной базы данных shop в СУБД MongoDB.
+
+
+>use shop
+>db.createCollection("catalogs")
+{ "ok" : 1 }
+>db.createCollection("products")
+{ "ok" : 1 }
+>
+>
+>db.catalogs.insert({id: 1, name: "Процессоры"})
+WriteResult({ "nInserted" : 1 })
+>db.catalogs.insert({id: 2, name: "Материнские платы"})
+WriteResult({ "nInserted" : 1 })
+>db.catalogs.insert({id: 3, name: "Видеокарты"})
+WriteResult({ "nInserted" : 1 })
+>db.catalogs.insert({id: 4, name: "Жесткие диски"})
+WriteResult({ "nInserted" : 1 })
+>db.catalogs.insert({id: 5, name: "Оперативная память"})
+WriteResult({ "nInserted" : 1 })
+> db.products.insert({id: 1, name: "Intel Core i3-8100", description: "Процессор для настольных персональных компьютеров, основанных на платформе Intel.", price: 7890, catalog_id: 1})
+WriteResult({ "nInserted" : 1 })
+> db.products.insert({id: 2, name: "Intel Core i5-7400", description: "Процессор для настольных персональных компьютеров, основанных на платформе Intel.", price: 12700, catalog_id: 1})
+WriteResult({ "nInserted" : 1 })
+> db.products.insert({id: 3, name: "AMD FX-8320E", description: "Процессор для настольных персональных компьютеров, основанных на платформе AMD.", price: 4780, catalog_id: 1})
+WriteResult({ "nInserted" : 1 })
+> db.products.insert({id: 4, name: "AMD FX-8320", description: "Процессор для настольных персональных компьютеров, основанных на платформе AMD.", price: 7120, catalog_id: 1})
+WriteResult({ "nInserted" : 1 })
+> db.products.insert({id: 5, name: "ASUS ROG MAXIMUS X HERO", description: "Материнская плата ASUS ROG MAXIMUS X HERO, Z370, Socket 1151-V2, DDR4, ATX", price: 19310, catalog_id: 2})
+WriteResult({ "nInserted" : 1 })
+> db.products.insert({id: 6, name: "Gigabyte H310M S2H", description: "Материнская плата Gigabyte H310M S2H, H310, Socket 1151-V2, DDR4, mATX", price: 4790, catalog_id: 2})
+WriteResult({ "nInserted" : 1 })
+> db.products.insert({id: 7, name: "MSI B250M GAMING PRO", description: "Материнская плата MSI B250M GAMING PRO, B250, Socket 1151, DDR4, mATX", price: 5060, catalog_id: 2})
+WriteResult({ "nInserted" : 1 })
+>
+>
+> db.catalogs.find()
+{ "_id" : ObjectId("5de93f01e8e3db0edb9143d2"), "id" : 1, "name" : "Процессоры" }
+{ "_id" : ObjectId("5de93f12e8e3db0edb9143d3"), "id" : 2, "name" : "Материнские платы" }
+{ "_id" : ObjectId("5de93f37e8e3db0edb9143d4"), "id" : 3, "name" : "Видеокарты" }
+{ "_id" : ObjectId("5de93f50e8e3db0edb9143d5"), "id" : 4, "name" : "Жесткие диски" }
+{ "_id" : ObjectId("5de93f68e8e3db0edb9143d6"), "id" : 5, "name" : "Оперативная память" }
+> db.products.find()
+{ "_id" : ObjectId("5de9401ce8e3db0edb9143d7"), "id" : 1, "name" : "Intel Core i3-8100", "description" : "Процессор для настольных персональных компьютеров, основанных на платформе Intel.", "price" : 7890, "catalog_id" : 1 }
+{ "_id" : ObjectId("5de94108e8e3db0edb9143da"), "id" : 2, "name" : "Intel Core i5-7400", "description" : "Процессор для настольных персональных компьютеров, основанных на платформе Intel.", "price" : 12700, "catalog_id" : 1 }
+{ "_id" : ObjectId("5de940cce8e3db0edb9143d9"), "id" : 3, "name" : "AMD FX-8320E", "description" : "Процессор для настольных персональных компьютеров, основанных на платформе AMD.", "price" : 4780, "catalog_id" : 1 }
+{ "_id" : ObjectId("5de94178e8e3db0edb9143db"), "id" : 4, "name" : "AMD FX-8320", "description" : "Процессор для настольных персональных компьютеров, основанных на платформе AMD.", "price" : 7120, "catalog_id" : 1 }
+{ "_id" : ObjectId("5de941f3e8e3db0edb9143dc"), "id" : 5, "name" : "ASUS ROG MAXIMUS X HERO", "description" : "Материнская плата ASUS ROG MAXIMUS X HERO, Z370, Socket 1151-V2, DDR4, ATX", "price" : 19310, "catalog_id" : 2 }
+{ "_id" : ObjectId("5de9427be8e3db0edb9143dd"), "id" : 6, "name" : "Gigabyte H310M S2H", "description" : "Материнская плата Gigabyte H310M S2H, H310, Socket 1151-V2, DDR4, mATX", "price" : 4790, "catalog_id" : 2 }
+{ "_id" : ObjectId("5de942c8e8e3db0edb9143de"), "id" : 7, "name" : "MSI B250M GAMING PRO", "description" : "Материнская плата MSI B250M GAMING PRO, B250, Socket 1151, DDR4, mATX", "price" : 5060, "catalog_id" : 2 }
+> quit()
+
+
+
+
+
