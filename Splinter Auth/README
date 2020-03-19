@@ -1,7 +1,7 @@
 =Splinter Auth.=
 
 Description:
--This program acts as an authentification system that potentially may be attached upfront to any other script or program.
+-This program acts as an authentication system that potentially may be attached upfront to any other script or program.
 
 Features:
 -Log in module (which is based on user profile log file (/acc))
