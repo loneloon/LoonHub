@@ -1,5 +1,0 @@
-colors:
-
-blue bg = #306082
-fg = #fafbf6
-red selection = #ac3232
