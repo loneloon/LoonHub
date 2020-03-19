@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/../KeyKraft/.idea/KeyKraft.iml" filepath="$PROJECT_DIR$/../KeyKraft/.idea/KeyKraft.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/SimpleAccountant.iml" filepath="$PROJECT_DIR$/.idea/SimpleAccountant.iml" />
-    </modules>
-  </component>
-</project>
