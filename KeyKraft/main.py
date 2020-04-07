@@ -146,9 +146,9 @@ def OnMotion(event):
     root.geometry("+%s+%s" % (x, y))
 
 
-root.label.bind("<ButtonPress-1>", StartMove)
-root.label.bind("<ButtonRelease-1>", StopMove)
-root.label.bind("<B1-Motion>", OnMotion)
+root.bind("<ButtonPress-1>", StartMove)
+root.bind("<ButtonRelease-1>", StopMove)
+root.bind("<B1-Motion>", OnMotion)
 
 # Инициализация папки
 
