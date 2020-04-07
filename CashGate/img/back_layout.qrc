@@ -1,0 +1,14 @@
+<RCC>
+  <qresource prefix="backgroundpic">
+    <file>cashgate_frame_full.png</file>
+  </qresource>
+  <qresource prefix="spend_button">
+    <file>SPEND.png</file>
+  </qresource>
+  <qresource prefix="recount_button">
+    <file>RECOUNT.png</file>
+  </qresource>
+  <qresource prefix="deposit_button">
+    <file>DEPOSIT.png</file>
+  </qresource>
+</RCC>

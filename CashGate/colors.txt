@@ -1,0 +1,7 @@
+dark bg = 041B15
+bright bg = 136F63
+pale fg = 22AAA1
+bright fg = 4CE0D2
+orange = ECA400
+buttons bg = E09100
+button text = 002E35

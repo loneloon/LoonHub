@@ -1,0 +1,22 @@
+=25.03.2020=
+
+Bugs:
+    -After adding up leftovers due to user's absence for a few days if you choose to add it to 'saved'
+    you are left with 0 cash allowed for current day.
+
+    (Fixed!)
+
+
+
+=31.03.2020=
+
+Done:
+    -Text based version completed.
+    -Gui layout almost completed
+    -Daily balance timer added
+
+Goals up:
+    -Recount page
+    -Balance history
+    -Proceed to binding gui features to cashgate.py script
+
