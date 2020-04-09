@@ -6,5 +6,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.7 (CashGate)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="Countraining" />
+    <orderEntry type="module" module-name="FishandChimps" />
   </component>
 </module>

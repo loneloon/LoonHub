@@ -20,9 +20,25 @@ import sys
 
 recent_position = "+550+250"
 
+# Блок инициализации основного скрипта
+
+cash = cage.Entry()
+
+first_log_at = cash.first_log_at
+first_log_today = cash.first_log_today
+last_log = cash.last_log
+cur_date = cash.cur_date
+balance = cash.balance
+saved = cash.saved
+allowance = cash.allowed_expense
+lft4td = cash.left4td
+leftovers = cash.leftovers
+
 
 class Intro:
-    def __init__(self, orient):
+    def __init__(self, orient, alternative_message=None, alt_size=None, clue=None):
+        global first_log_at, first_log_today, last_log, cur_date, balance, saved, allowance, lft4td, leftovers
+
         root = tk.Tk()
 
         root.main_lbl = tk.PhotoImage(file='img/welcome_screen_35.png')
@@ -36,17 +52,26 @@ class Intro:
         root.wm_attributes("-transparentcolor", "#CD0074")
         root.label.pack()
 
-        message_var = tk.StringVar()
-        message_var.set("Seems like you're new to CashGate!\r"
-                        "It will help you organize your balance,\r"
-                        "control your spending and savings.\n\r"
-                        "Please consider reading help notes to \rlearn about its functions or dismiss\r if you used it previously.\n\n"
-                        ""
-                        "Official Cash Gate app. does not store,\r share or record your personal information.\r"
-                        "It is merely a calculator that can remember\r variables and spread your active\r funds over a designated time period\r"
-                        "Please be aware and use the official version\r in order to evade potential fraud under the veil\r of a seemingly alike third-party distributive.")
+        self.alternative_font_size = 10
 
-        root.message_lbl = tk.Label(root, textvariable=message_var, bg='#000000', font=('Arial', 10, 'bold'),
+        if alt_size is not None:
+            self.alternative_font_size = alt_size
+
+        message_var = tk.StringVar()
+
+        if alternative_message is not None:
+            message_var.set(alternative_message)
+        else:
+            message_var.set("Seems like you're new to CashGate!\r"
+                            "It will help you organize your balance,\r"
+                            "control your spending and savings.\n\r"
+                            "Please consider reading help notes to \rlearn about its functions or dismiss\r if you used it previously.\n\n"
+                            ""
+                            "Official Cash Gate app. does not store,\r share or record your personal information.\r"
+                            "It is merely a calculator that can remember\r variables and spread your active\r funds over a designated time period\r"
+                            "Please be aware and use the official version\r in order to evade potential fraud under the veil\r of a seemingly alike third-party distributive.")
+
+        root.message_lbl = tk.Label(root, textvariable=message_var, bg='#000000', font=('Arial', self.alternative_font_size, 'bold'),
                                     fg='#ECA400', relief='flat', justify='center')
         root.message_lbl.place(x=64, y=260)
 
@@ -60,12 +85,20 @@ class Intro:
             root.destroy()
             Main(recent_position, 'help start')
 
+        def toLeft():
+            recent_position = root.geometry()[7:]
+            root.destroy()
+            Main(recent_position, 'leftover start')
+
 
         # Кнопка Start
 
         root.start_but_pic = tk.PhotoImage(file='img/start_welcome_screen_35.png')
         root.start_but_lbl = tk.Button(root, image=root.start_but_pic, bg='#000000', relief='flat', command=Start)
         root.start_but_lbl.place(x=223, y=680)
+
+        if clue == 'leftover start':
+            root.start_but_lbl.configure(command=toLeft)
 
         # Кнопка Help
 
@@ -109,6 +142,8 @@ class Intro:
 
 class Main:
     def __init__(self, orient, clue=None):
+        global first_log_at, first_log_today, last_log, cur_date, balance, saved, allowance, lft4td, leftovers
+
         root = tk.Tk()
 
         root.main_lbl = tk.PhotoImage(file='img/cashgate_35.png')
@@ -122,30 +157,46 @@ class Main:
         root.wm_attributes("-transparentcolor", "#CD0074")
         root.label.pack()
 
+
+        # Leftover box creation & buttons
+
+        root.leftover_box_pic = tk.PhotoImage(file='img/cash_left_35.png')
+        root.leftover_box = tk.Label(root, image=root.leftover_box_pic, bg='#041B15', relief='flat')
+
+        leftover_show_string = tk.StringVar()
+
+        root.leftover_box_path = tk.Label(root, textvariable=leftover_show_string, bg='#000000', fg='white', relief='flat', font=('Arial', 37, 'bold'),
+                                          justify='center')
+
+        root.left_to_balance_button_pic = tk.PhotoImage(file='img/TO_BALANCE_AND_RECOUNT_35.png')
+        root.left_to_saved_button_pic = tk.PhotoImage(file='img/ADD_TO_SAVED_35.png')
+        root.left_to_spend_button_pic = tk.PhotoImage(file='img/SPEND_IT_TODAY_35.png')
+
+        root.left_to_balance_button_lbl = tk.Button(root, image=root.left_to_balance_button_pic, bg='#041B15', relief='flat')
+        root.left_to_saved_button_lbl = tk.Button(root, image=root.left_to_saved_button_pic, bg='#041B15', relief='flat')
+        root.left_to_spend_button_lbl = tk.Button(root, image=root.left_to_spend_button_pic, bg='#041B15', relief='flat')
+
+        def leftover_buttons_show():
+            root.left_to_balance_button_lbl.place(x=30, y=555, width=378, height=56)
+            root.left_to_saved_button_lbl.place(x=30, y=625, width=378, height=56)
+            root.left_to_spend_button_lbl.place(x=30, y=695, width=378, height=56)
+
+        def leftover_buttons_hide():
+            root.left_to_balance_button_lbl.place_forget()
+            root.left_to_saved_button_lbl.place_forget()
+            root.left_to_spend_button_lbl.place_forget()
+
+
         # Amount box creation
 
         root.m_box_pic = tk.PhotoImage(file='img/AMOUNT_35.png')
-        root.m_box_lftovr = tk.Label(root, image=root.m_box_pic, bg='#041B15', relief='flat')
+        root.m_box_amount = tk.Label(root, image=root.m_box_pic, bg='#041B15', relief='flat')
 
-        root.m_box_amount = tk.Entry(root, bg='#000000', fg='white', relief='flat', font=('Arial', 37, 'bold'),
-                                     justify='center')
+        root.m_box_amount_path = tk.Entry(root, bg='#000000', fg='white', relief='flat', font=('Arial', 37, 'bold'),
+                                          justify='center')
 
         history_on = False
         display_on = False
-
-        # Данные
-
-        cash = cage.Entry()
-
-        first_log_at = cash.first_log_at
-        first_log_today = cash.first_log_today
-        last_log = cash.last_log
-        cur_date = cash.cur_date
-        balance = cash.balance
-        saved = cash.saved
-        allowance = cash.allowed_expense
-        lft4td = cash.left4td
-        leftovers = cash.leftovers
 
         # Подпись к секции баланса
 
@@ -155,8 +206,8 @@ class Main:
         root.yourbalance_lbl.configure(text=f'your balance  ', compound='center', justify='left')
         root.yourbalance_lbl.place(x=2, y=218, width=154, height=27)
 
-        balance_today = tk.DoubleVar()
-        balance_today.set(666.0)
+        #balance_today = tk.DoubleVar()
+        #balance_today.set(666.0)
 
         # Часы
 
@@ -170,7 +221,7 @@ class Main:
         root.balance_num_pic = tk.PhotoImage(file='img/banner_mid_35.png')
         root.balance_num_lbl = tk.Label(root, image=root.balance_num_pic, background='#FB9300', foreground='#002E35',
                                         font=('Arial', 35), relief='flat', bd=0)
-        root.balance_num_lbl.configure(textvariable=balance_today, compound='center')
+        root.balance_num_lbl.configure(text=lft4td, compound='center')
         root.balance_num_lbl.place(x=108, y=125, width=222, height=93)
 
         # Кнопка Exit
@@ -214,9 +265,9 @@ class Main:
             saved_bod_var = tk.DoubleVar()
             dailymax_bod_var = tk.DoubleVar()
 
-            balance_bod_var.set(0)
-            saved_bod_var.set(0)
-            dailymax_bod_var.set(0)
+            balance_bod_var.set(balance)
+            saved_bod_var.set(saved)
+            dailymax_bod_var.set(allowance)
 
             root.body_top_left_lbl = tk.Label(root, image=root.body_top_left_pic, text='Balance:          ',
                                               justify='left', bg='#041B15', fg='#4CE0D2', relief='flat',
@@ -385,16 +436,16 @@ class Main:
                 DisplayHide()
                 HistoryHide()
 
-                root.m_box_lftovr.place(x=14, y=330, width=411, height=137)
+                root.m_box_amount.place(x=14, y=330, width=411, height=137)
 
-                root.m_box_amount.place(x=26, y=380, width=387, height=76)
+                root.m_box_amount_path.place(x=26, y=380, width=387, height=76)
 
                 root.add_button_lbl.place(x=27, y=570)
                 root.cancel_button_lbl.place(x=27, y=670)
 
                 def MExit():
-                    root.m_box_lftovr.place_forget()
                     root.m_box_amount.place_forget()
+                    root.m_box_amount_path.place_forget()
 
                     root.add_button_lbl.place_forget()
                     root.cancel_button_lbl.place_forget()
@@ -417,16 +468,16 @@ class Main:
 
                 mini_nav_disable()
 
-                root.m_box_lftovr.place(x=14, y=330, width=411, height=137)
+                root.m_box_amount.place(x=14, y=330, width=411, height=137)
 
-                root.m_box_amount.place(x=26, y=380, width=387, height=76)
+                root.m_box_amount_path.place(x=26, y=380, width=387, height=76)
 
                 root.spend_big_button_lbl.place(x=27, y=570)
                 root.cancel_button_lbl.place(x=27, y=670)
 
                 def MExit():
-                    root.m_box_lftovr.place_forget()
                     root.m_box_amount.place_forget()
+                    root.m_box_amount_path.place_forget()
 
                     root.spend_big_button_lbl.place_forget()
                     root.cancel_button_lbl.place_forget()
@@ -515,6 +566,37 @@ class Main:
                 root.exit_overhelp.place(x=404, y=3)
 
 
+        class Leftovers:
+            def __init__(self):
+                menu_buttons_hide()
+
+                mini_nav_disable()
+
+                DisplayHide()
+                HistoryHide()
+
+                leftover_show_string.set(leftovers)
+
+                root.leftover_box.place(x=14, y=280, width=411, height=249)
+                root.leftover_box_path.place(x=26, y=360, width=387, height=76)
+
+                leftover_buttons_show()
+
+                def MExit():
+                    root.leftover_box.place_forget()
+                    root.leftover_box_path.place_forget()
+
+                    leftover_buttons_hide()
+
+                    #root.spend_big_button_lbl.place_forget()
+                    #root.cancel_button_lbl.place_forget()
+
+                    menu_buttons_show()
+
+                    mini_nav_enable()
+
+                    DisplayShow()
+
         # Блок описывающий перетаскивание основного окна курсором
 
         def StartMove(event):
@@ -539,9 +621,16 @@ class Main:
         # Активация окна
         if clue == 'help start':
             Help()
+        elif clue == 'leftover start':
+            Leftovers()
 
         root.after_idle(timer)
         root.mainloop()
 
 
-Intro(recent_position)
+# First login check
+
+if not first_log_at:
+    Intro(recent_position, 'u idit lol, ur mani stolen', 20, 'leftover start')
+else:
+    Intro(recent_position)

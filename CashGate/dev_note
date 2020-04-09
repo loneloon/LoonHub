@@ -20,3 +20,22 @@ Goals up:
     -Balance history
     -Proceed to binding gui features to cashgate.py script
 
+
+Done
+
+=09.04.2020=
+
+Done:
+    - Leftover menu
+    - Previous login check implemented
+    - Welcome Screen ready
+    - Help Screen ready
+    - Mini nav. feature implemented
+    - Recount warning done
+    - Deposit/Withdraw boxes done
+
+Goals up:
+    - Fix leftover sum. bug
+    - Activate input handling
+    - Create operation history recording and output
+
