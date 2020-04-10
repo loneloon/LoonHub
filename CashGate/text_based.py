@@ -40,6 +40,9 @@ try:
             oneormany = ''
         print(f"Your last login was {mia_days} day%s ago." % oneormany)
         leftovers = int(mia_days-1)*allowed_expense + int(hist_imp[4])
+        if leftovers > balance:
+            leftovers = balance
+            balance = 0
         print(f"You saved {leftovers}")
         print("")
         print("What are you willing to do with all that money?")

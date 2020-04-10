@@ -28,11 +28,24 @@ first_log_at = cash.first_log_at
 first_log_today = cash.first_log_today
 last_log = cash.last_log
 cur_date = cash.cur_date
-balance = cash.balance
-saved = cash.saved
-allowance = cash.allowed_expense
-lft4td = cash.left4td
-leftovers = cash.leftovers
+balance = int(cash.balance)
+saved = int(cash.saved)
+allowance = int(cash.allowed_expense)
+lft4td = int(cash.left4td)
+leftovers = int(cash.leftovers)
+
+def init_values():
+    global first_log_at, first_log_today, last_log, cur_date, balance, saved, allowance, lft4td, leftovers
+
+    first_log_at = cash.first_log_at
+    first_log_today = cash.first_log_today
+    last_log = cash.last_log
+    cur_date = cash.cur_date
+    balance = int(cash.balance)
+    saved = int(cash.saved)
+    allowance = int(cash.allowed_expense)
+    lft4td = int(cash.left4td)
+    leftovers = int(cash.leftovers)
 
 
 class Intro:
@@ -227,6 +240,7 @@ class Main:
         # Кнопка Exit
 
         def Exit():
+            cash.save_quit()
             root.destroy()
 
         root.exit_lbl = tk.PhotoImage(file='img/exit_orange_35.png')
@@ -253,6 +267,10 @@ class Main:
 
         # Дисплей в теле
 
+        balance_bod_var = tk.DoubleVar()
+        saved_bod_var = tk.DoubleVar()
+        dailymax_bod_var = tk.DoubleVar()
+
         def Display():
             root.body_top_left_pic = tk.PhotoImage(file='img/body_mid_text_top_left_35.png')
             root.body_top_right_pic = tk.PhotoImage(file='img/body_mid_text_top_right_35.png')
@@ -261,13 +279,6 @@ class Main:
             root.body_bot_left_pic = tk.PhotoImage(file='img/body_mid_text_bot_left_35.png')
             root.body_bot_right_pic = tk.PhotoImage(file='img/body_mid_text_bot_right_35.png')
 
-            balance_bod_var = tk.DoubleVar()
-            saved_bod_var = tk.DoubleVar()
-            dailymax_bod_var = tk.DoubleVar()
-
-            balance_bod_var.set(balance)
-            saved_bod_var.set(saved)
-            dailymax_bod_var.set(allowance)
 
             root.body_top_left_lbl = tk.Label(root, image=root.body_top_left_pic, text='Balance:          ',
                                               justify='left', bg='#041B15', fg='#4CE0D2', relief='flat',
@@ -294,6 +305,15 @@ class Main:
                                                compound='center', font=('Arial', 18, 'bold'))
 
         Display()
+
+        def update_display():
+            global first_log_at, first_log_today, last_log, cur_date, balance, saved, allowance, lft4td, leftovers
+            balance_bod_var.set(balance)
+            saved_bod_var.set(saved)
+            dailymax_bod_var.set(allowance)
+            root.balance_num_lbl.configure(text=lft4td)
+
+        update_display()
 
         def DisplayShow():
             HistoryHide()
@@ -456,7 +476,13 @@ class Main:
 
                     DisplayShow()
 
+                def Deposit():
+                    global balance
+
+                    balance += root.m_box_amount_path.get()
+
                 root.cancel_button_lbl.configure(command=MExit)
+                root.add_button_lbl.configure(command=Deposit)
 
         class SpendBox:
 
@@ -526,6 +552,9 @@ class Main:
                     root.right_but_lbl.destroy()
                     root.start_but_lbl.destroy()
 
+                    if leftovers != 0:
+                        Leftovers()
+
                 def PageLeft():
                     pass
 
@@ -558,6 +587,7 @@ class Main:
                 # Дубликат оригинального exit, т.к. Help - оверлэй
 
                 def Exit():
+                    cash.save_quit()
                     root.destroy()
 
                 root.exit_lbl_overhelp = tk.PhotoImage(file='img/exit_orange_35.png')
@@ -588,14 +618,42 @@ class Main:
 
                     leftover_buttons_hide()
 
-                    #root.spend_big_button_lbl.place_forget()
-                    #root.cancel_button_lbl.place_forget()
+                    root.leftover_box.place_forget()
+                    root.leftover_box_path.place_forget()
 
                     menu_buttons_show()
 
                     mini_nav_enable()
 
                     DisplayShow()
+
+                def add_recount():
+                    global balance, leftovers, allowance, lft4td, cash
+                    cash.left_add_to_balance()
+                    init_values()
+                    update_display()
+                    MExit()
+
+
+                def add_to_saved():
+                    global balance, leftovers, allowance, lft4td, cash
+                    cash.left_add_to_saved()
+                    init_values()
+                    update_display()
+                    MExit()
+
+
+                def spend_today():
+                    global balance, leftovers, allowance, lft4td, cash
+                    cash.left_spend_today()
+                    init_values()
+                    update_display()
+                    MExit()
+
+
+                root.left_to_balance_button_lbl.configure(command=add_recount)
+                root.left_to_saved_button_lbl.configure(command=add_to_saved)
+                root.left_to_spend_button_lbl.configure(command=spend_today)
 
         # Блок описывающий перетаскивание основного окна курсором
 
@@ -618,10 +676,11 @@ class Main:
         root.bind("<ButtonRelease-1>", StopMove)
         root.bind("<B1-Motion>", OnMotion)
 
+
         # Активация окна
         if clue == 'help start':
             Help()
-        elif clue == 'leftover start':
+        elif clue == 'leftover start' or leftovers != 0:
             Leftovers()
 
         root.after_idle(timer)
@@ -630,7 +689,12 @@ class Main:
 
 # First login check
 
-if not first_log_at:
-    Intro(recent_position, 'u idit lol, ur mani stolen', 20, 'leftover start')
+if not first_log_today:
+    Main(recent_position)
+elif not first_log_at:
+    if leftovers != 0:
+        Intro(recent_position, 'u idit lol, ur mani stolen', 20, 'leftover start')
+    else:
+        Intro(recent_position, 'u idit lol, ur mani stolen', 20)
 else:
     Intro(recent_position)
