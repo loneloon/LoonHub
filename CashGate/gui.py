@@ -24,6 +24,7 @@ recent_position = "+550+250"
 
 cash = cage.Entry()
 
+days_left = cash.days_left
 first_log_at = cash.first_log_at
 first_log_today = cash.first_log_today
 last_log = cash.last_log
@@ -419,32 +420,37 @@ class Main:
 
         # Warning Message
 
-        root.warning_pic = tk.PhotoImage(file='img/warning_35.png')
+        root.warning_pic = tk.PhotoImage(file='img/warning_narrow_35.png')
         root.warning_lbl = tk.Label(root, image=root.warning_pic, bg='#041B15', relief='flat')
         root.warning_text = tk.Label(root, bg='#000000', fg='white')
 
-        def warning_box(message: string, pos: list):
+        def warning_box(message: string, pos: list, font_size=None):
+            if font_size is None:
+                font_size = 19
             warning_contents = tk.StringVar()
             warning_contents.set(message)
 
-            root.warning_text.configure(textvariable=warning_contents, compound='center', font=('Arial', 19, 'bold'))
+            root.warning_text.configure(textvariable=warning_contents, compound='center', font=('Arial', font_size, 'bold'), justify='center')
 
-            root.warning_lbl.place(x=14, y=330)
+            root.warning_lbl.place(x=14, y=330, width=411, height=155)
             root.warning_text.place(x=pos[0], y=pos[1])
 
         def hide_warning():
             root.warning_lbl.place_forget()
             root.warning_text.place_forget()
-            menu_buttons_enable()
-            mini_nav_enable()
 
         def recount_warn():
-            mini_nav_disable()
-            warning_box("Please RECOUNT before\n spending funds!", [70, 425])
-            menu_buttons_disable()
+            warning_box("Please RECOUNT before\n spending funds!", [70, 390])
             root.warning_lbl.after(3000, hide_warning)
 
-        root.recount_button_lbl.configure(command=recount_warn)  # Binding warning command
+        def recount_allowance():
+            global balance, allowance, lft4td, days_left
+
+            cash.recount()
+            init_values()
+            update_display()
+
+        root.recount_button_lbl.configure(command=recount_allowance)  # Binding warning command
 
         class BalanceAddBox:
 
@@ -476,10 +482,27 @@ class Main:
 
                     DisplayShow()
 
+                def deposit_buttons_disable():
+                    root.add_button_lbl.configure(state='disabled')
+                    root.cancel_button_lbl.configure(state='disabled')
+
+                def deposit_buttons_enable():
+                    root.add_button_lbl.configure(state='normal')
+                    root.cancel_button_lbl.configure(state='normal')
+
+
                 def Deposit():
                     global balance
-
-                    balance += root.m_box_amount_path.get()
+                    try:
+                        cash.deposit(round(float((root.m_box_amount_path.get())), 2))
+                        init_values()
+                        update_display()
+                        MExit()
+                    except ValueError:
+                        warning_box('Please enter a number!', [38, 400], 25)
+                        root.after_idle(deposit_buttons_disable)
+                        root.warning_lbl.after(3000, hide_warning)
+                        root.after(3000, deposit_buttons_enable)
 
                 root.cancel_button_lbl.configure(command=MExit)
                 root.add_button_lbl.configure(command=Deposit)
@@ -514,12 +537,46 @@ class Main:
 
                     DisplayShow()
 
+                def spend_buttons_disable():
+                    root.spend_big_button_lbl.configure(state='disabled')
+                    root.cancel_button_lbl.configure(state='disabled')
+
+                def spend_buttons_enable():
+                    root.spend_big_button_lbl.configure(state='normal')
+                    root.cancel_button_lbl.configure(state='normal')
+
+                def Spend():
+                    global lft4td, balance, allowance
+
+                    if allowance == 0:
+                        root.after_idle(spend_buttons_disable)
+                        recount_warn()
+                        root.warning_lbl.after(3000, hide_warning)
+                        root.after(3000, spend_buttons_enable)
+                        root.after(3000, MExit)
+                    else:
+                        try:
+                            feedback = cash.simple_spend(round(float((root.m_box_amount_path.get())), 2))
+                        except ValueError:
+                            feedback = 'Please enter a number!'
+                        if type(feedback) != list:
+                            warning_box(feedback, [38, 400], 25)
+                            root.after_idle(spend_buttons_disable)
+                            root.warning_lbl.after(3000, hide_warning)
+                            root.after(3000, spend_buttons_enable)
+                        else:
+                            init_values()
+                            update_display()
+                            MExit()
+
+                root.spend_big_button_lbl.configure(command=Spend)
                 root.cancel_button_lbl.configure(command=MExit)
 
         # Init Button commands
 
         root.spend_small_button_lbl.configure(command=SpendBox)
         root.deposit_button_lbl.configure(command=BalanceAddBox)
+
 
         # Окно помощи
 

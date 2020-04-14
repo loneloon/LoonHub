@@ -8,5 +8,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Countraining" />
     <orderEntry type="module" module-name="FishandChimps" />
+    <orderEntry type="module" module-name="Serenity" />
+    <orderEntry type="module" module-name="RawInput" />
   </component>
 </module>

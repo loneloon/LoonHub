@@ -77,8 +77,6 @@ class Entry:
 
     def deposit(self, amount):
         self.balance += amount
-        self.saved = amount
-        self.balance -= self.saved
 
     def recount(self, custom_days=None):
         if custom_days is None:
@@ -95,14 +93,16 @@ class Entry:
                 self.balance -= amount
                 return [amount, self.left4td]
             else:
-                return "Not enough left"
+                return "      Not enough left!"
         else:
             return "Please count/recount expenses before spending cash!"
 
     def save_quit(self):
-        register = open("reg_log", "w")
-        register.write(f'{self.cur_date}/{self.balance}/{self.saved}/{self.allowed_expense}/{self.left4td};')
-        register.close()
+        if self.leftovers == 0:
+            register = open("reg_log", "w")
+            register.write(f'{self.cur_date}/{self.balance}/{self.saved}/{self.allowed_expense}/{self.left4td};')
+            register.close()
+
 
 
 
