@@ -34,6 +34,10 @@ saved = int(cash.saved)
 allowance = int(cash.allowed_expense)
 lft4td = int(cash.left4td)
 leftovers = int(cash.leftovers)
+box_1_checked = False
+box_2_checked = False
+recount_custom_days = None
+hist_temp = []
 
 def init_values():
     global first_log_at, first_log_today, last_log, cur_date, balance, saved, allowance, lft4td, leftovers
@@ -252,7 +256,7 @@ class Main:
         def History():
             root.history_block_pic = tk.PhotoImage(file='img/body_mid_text_35.png')
             root.history_label = tk.Label(root, image=root.history_block_pic, justify='left', bg='#041B15',
-                                          fg='#4CE0D2', relief='flat', compound='center', font=('Arial', 18, 'bold'))
+                                          fg='#4CE0D2', relief='flat', compound='center', font=('Arial', 11, 'bold'))
 
         History()
 
@@ -265,6 +269,28 @@ class Main:
         def HistoryHide():
             root.history_label.place_forget()
             history_on = False
+
+
+        def HistoryUpdate():
+            global hist_temp
+
+            hist_temp = ['\n']
+
+            with open("history", "r") as h:
+                tot = len(h.readlines())
+            with open("history", "r") as h:
+                for idx, i in enumerate(h.readlines()):
+                    if tot > 5:
+                        if idx > (tot - 6):
+                            hist_temp.append(i)
+                    else:
+                        hist_temp.append(i)
+            h.close()
+
+            root.history_label.configure(text=("\r".join(hist_temp)), compound='center', justify='left')
+
+        HistoryUpdate()
+
 
         # Дисплей в теле
 
@@ -424,15 +450,19 @@ class Main:
         root.warning_lbl = tk.Label(root, image=root.warning_pic, bg='#041B15', relief='flat')
         root.warning_text = tk.Label(root, bg='#000000', fg='white')
 
-        def warning_box(message: string, pos: list, font_size=None):
+        def warning_box(message: string, pos: list, font_size=None, w_x=None, w_y=None):
             if font_size is None:
                 font_size = 19
             warning_contents = tk.StringVar()
             warning_contents.set(message)
 
+            if w_x is None or w_y is None:
+                w_x = 14
+                w_y = 330
+
             root.warning_text.configure(textvariable=warning_contents, compound='center', font=('Arial', font_size, 'bold'), justify='center')
 
-            root.warning_lbl.place(x=14, y=330, width=411, height=155)
+            root.warning_lbl.place(x=w_x, y=w_y, width=411, height=155)
             root.warning_text.place(x=pos[0], y=pos[1])
 
         def hide_warning():
@@ -443,14 +473,8 @@ class Main:
             warning_box("Please RECOUNT before\n spending funds!", [70, 390])
             root.warning_lbl.after(3000, hide_warning)
 
-        def recount_allowance():
-            global balance, allowance, lft4td, days_left
 
-            cash.recount()
-            init_values()
-            update_display()
-
-        root.recount_button_lbl.configure(command=recount_allowance)  # Binding warning command
+        #root.recount_button_lbl.configure(command=recount_allowance)  # Binding warning command
 
         class BalanceAddBox:
 
@@ -495,8 +519,10 @@ class Main:
                     global balance
                     try:
                         cash.deposit(round(float((root.m_box_amount_path.get())), 2))
+                        root.m_box_amount_path.delete(0, 'end')
                         init_values()
                         update_display()
+                        HistoryUpdate()
                         MExit()
                     except ValueError:
                         warning_box('Please enter a number!', [38, 400], 25)
@@ -567,6 +593,7 @@ class Main:
                         else:
                             init_values()
                             update_display()
+                            HistoryUpdate()
                             MExit()
 
                 root.spend_big_button_lbl.configure(command=Spend)
@@ -577,6 +604,119 @@ class Main:
         root.spend_small_button_lbl.configure(command=SpendBox)
         root.deposit_button_lbl.configure(command=BalanceAddBox)
 
+
+        # Recount day selection
+
+        root.recount_days_pic = tk.PhotoImage(file="img/recount_days_choice_35.png")
+        root.recount_days_lbl = tk.Label(root, image=root.recount_days_pic, width=411, height=125, bg='#060B0B', relief='flat')
+
+        root.green_check_pic = tk.PhotoImage(file="img/box_green_check_35.png")
+        root.green_check_lbl = tk.Label(root, image=root.green_check_pic, width=32, height=32, bg='#090707', relief='flat')
+
+        root.recount_days_but_pic = tk.PhotoImage(file="img/mini_recount_but_35.png")
+        root.recount_days_but = tk.Button(root, image=root.recount_days_but_pic, width=201, height=52, bg='#090707', relief='flat')
+
+        root.recount_custom_days_entry = tk.Entry(root, bg='#000000', fg='white', relief='flat', font=('Arial', 30, 'bold'),
+                                          justify='center')
+
+        # globals for Recounting
+
+        class Recount:
+            def __init__(self):
+                global box_1_checked, box_2_checked, recount_custom_days
+
+                mini_nav_disable()
+                menu_buttons_disable()
+
+                DisplayHide()
+
+                root.recount_days_lbl.place(x=12, y=280)
+                root.recount_days_but.place(x=114, y=407)
+                root.recount_custom_days_entry.place(x=213, y=340, width=50, height=57)
+
+                def place_check(event):
+                    global box_1_checked, box_2_checked
+                    root_place = root.winfo_geometry()[7:].split('+')[1:]
+                    relative_pos = [int(root_place[0]) - event.x_root, int(root_place[1]) - event.y_root]
+
+                    if relative_pos[0] < -371 and relative_pos[0] > -403 and relative_pos[1] < -300 and relative_pos[
+                        1] > -333:
+                        if not box_1_checked:
+                            box_1_checked = True
+                            box_2_checked = False
+                        root.green_check_lbl.place(x=370, y=300)
+                    elif relative_pos[0] < -371 and relative_pos[0] > -403 and relative_pos[1] < -354 and relative_pos[1] > -386:
+                        if not box_2_checked:
+                            box_1_checked = False
+                            box_2_checked = True
+                        root.green_check_lbl.place(x=370, y=354)
+
+                root.bind('<ButtonRelease-1>', place_check)
+
+        def recount_items_hide():
+
+            root.recount_days_lbl.place_forget()
+            root.recount_days_but.place_forget()
+            root.green_check_lbl.place_forget()
+            root.recount_custom_days_entry.place_forget()
+
+        def recount_items_show():
+
+            root.recount_days_lbl.place(x=12, y=280)
+            root.recount_days_but.place(x=114, y=407)
+            root.recount_custom_days_entry.place(x=213, y=340, width=50, height=57)
+
+        def recount_allowance():
+            global balance, allowance, lft4td, days_left, box_1_checked, box_2_checked, recount_custom_days
+
+
+            if box_1_checked:
+                cash.recount()
+
+                init_values()
+
+                recount_items_hide()
+
+                mini_nav_enable()
+                menu_buttons_enable()
+                DisplayShow()
+
+                update_display()
+                HistoryUpdate()
+            elif box_2_checked:
+                try:
+                    recount_custom_days = int(root.recount_custom_days_entry.get())
+                    cash.recount(recount_custom_days)
+
+                    root.recount_custom_days_entry.delete(0, 'end')
+
+                    init_values()
+
+                    recount_items_hide()
+
+                    mini_nav_enable()
+                    menu_buttons_enable()
+                    DisplayShow()
+
+                    update_display()
+                    HistoryUpdate()
+                except ValueError:
+                    warning_box("Please enter a number or select\r 'until the end of month option'", [38, 345], 17,
+                                    14, 280)
+                    root.after_idle(recount_items_hide)
+                    root.warning_lbl.after(4000, hide_warning)
+                    root.after(4000, recount_items_show)
+            else:
+                warning_box("Please select \n either of the options!", [70, 335], 21,
+                            14, 280)
+                root.after_idle(recount_items_hide)
+                root.warning_lbl.after(4000, hide_warning)
+                root.after(4000, recount_items_show)
+
+
+        root.recount_button_lbl.configure(command=Recount)
+
+        root.recount_days_but.configure(command=recount_allowance)
 
         # Окно помощи
 
@@ -689,6 +829,7 @@ class Main:
                     cash.left_add_to_balance()
                     init_values()
                     update_display()
+                    HistoryUpdate()
                     MExit()
 
 
@@ -697,6 +838,7 @@ class Main:
                     cash.left_add_to_saved()
                     init_values()
                     update_display()
+                    HistoryUpdate()
                     MExit()
 
 
@@ -705,6 +847,7 @@ class Main:
                     cash.left_spend_today()
                     init_values()
                     update_display()
+                    HistoryUpdate()
                     MExit()
 
 
@@ -713,6 +856,7 @@ class Main:
                 root.left_to_spend_button_lbl.configure(command=spend_today)
 
         # Блок описывающий перетаскивание основного окна курсором
+
 
         def StartMove(event):
             root.x = event.x

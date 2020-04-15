@@ -57,13 +57,21 @@ class Entry:
             print(
                 "Welcome to CashGate! I will help you organise your savings, control your spending and monitor your balance!")
 
+    def add_to_history(self, action):
+        hist = open("history", "a+")
+        hist.write(f"{action}\n")
+        hist.close()
+
     def left_add_to_balance(self):
+        self.add_to_history(f"+{self.leftovers} added to balance")
         self.balance += self.leftovers
         self.allowed_expense = self.balance / self.days_left
         self.leftovers = 0
         self.left4td += self.allowed_expense
 
+
     def left_add_to_saved(self):
+        self.add_to_history(f"+{self.leftovers} saved")
         self.saved += self.leftovers
         self.left4td += self.allowed_expense
         self.leftovers = 0
@@ -73,9 +81,11 @@ class Entry:
             self.left4td += self.leftovers + self.allowed_expense
         else:
             self.left4td += self.leftovers
+        self.add_to_history(f"+{self.leftovers} + daily {self.allowed_expense} allocated to spend today")
         self.leftovers = 0
 
     def deposit(self, amount):
+        self.add_to_history(f"+{amount} added to balance")
         self.balance += amount
 
     def recount(self, custom_days=None):
@@ -85,12 +95,14 @@ class Entry:
         else:
             self.allowed_expense = round(float(self.balance / custom_days), 2)
             self.left4td = self.allowed_expense
+            self.add_to_history(f"+{self.allowed_expense} allocated to spend today")
 
     def simple_spend(self, amount):
         if self.allowed_expense != 0:
             if amount <= self.left4td:
                 self.left4td -= amount
                 self.balance -= amount
+                self.add_to_history(f"-{amount} spent")
                 return [amount, self.left4td]
             else:
                 return "      Not enough left!"
