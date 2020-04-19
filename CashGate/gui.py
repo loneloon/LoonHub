@@ -90,7 +90,7 @@ class Intro:
                             "Please be aware and use the official version\r in order to evade potential fraud under the veil\r of a seemingly alike third-party distributive.")
 
         root.message_lbl = tk.Label(root, textvariable=message_var, bg='#000000', font=('Arial', self.alternative_font_size, 'bold'),
-                                    fg='#ECA400', relief='flat', justify='center')
+                                    fg='#ECA400', relief='flat', justify='left')
         root.message_lbl.place(x=64, y=260)
 
         def Start():
@@ -722,13 +722,20 @@ class Main:
 
         class Help:
             def __init__(self):
-                root.help_screen_pic = tk.PhotoImage(file='img/help_screen_35.png')
+                self.page_num = 1
 
-                root.help_screen_lbl = tk.Label(root, image=root.help_screen_pic, bg='#CD0074')
+                root.help_screen_1 = tk.PhotoImage(file='img/help_screen1_35.png')
+                root.help_screen_2 = tk.PhotoImage(file='img/help_screen2_35.png')
+                root.help_screen_3 = tk.PhotoImage(file='img/help_screen3_35.png')
+                root.help_screen_4 = tk.PhotoImage(file='img/help_screen4_35.png')
+                root.help_screen_5 = tk.PhotoImage(file='img/help_screen5_35.png')
+
+                self.help_pages = [root.help_screen_1, root.help_screen_2, root.help_screen_3, root.help_screen_4, root.help_screen_5]
+
+                root.help_screen_lbl = tk.Label(root, image=root.help_screen_1, bg='#CD0074')
                 root.help_screen_lbl.place(x=0, y=0, relwidth=1, relheight=1)
 
-                message_var = tk.StringVar()
-                message_var.set("Seems like you're new to CashGate!\r"
+                message_var = ("Seems like you're new to CashGate!\r"
                                 "It will help you organize your balance,\r"
                                 "control your spending and savings.\n\r"
                                 "Please consider reading help notes to \rlearn about its functions or dismiss\r if you used it previously.\n\n"
@@ -737,14 +744,10 @@ class Main:
                                 "It is merely a calculator that can remember\r variables and spread your active\r funds over a designated time period\r"
                                 "Please be aware and use the official version\r in order to evade potential fraud under the veil\r of a seemingly alike third-party distributive.")
 
-                root.message_lbl = tk.Label(root, textvariable=message_var, bg='#000000', font=('Arial', 10, 'bold'),
-                                            fg='#ECA400', relief='flat', justify='center')
-                root.message_lbl.place(x=64, y=260)
 
                 def BacktoMain():
                     root.exit_overhelp.destroy()
                     root.help_screen_lbl.destroy()
-                    root.message_lbl.destroy()
                     root.left_but_lbl.destroy()
                     root.right_but_lbl.destroy()
                     root.start_but_lbl.destroy()
@@ -753,16 +756,22 @@ class Main:
                         Leftovers()
 
                 def PageLeft():
-                    pass
+                    if self.page_num > 0:
+                        self.page_num -= 1
+                        root.help_screen_lbl.configure(image=self.help_pages[self.page_num])
+                        root.help_screen_lbl.update()
 
                 def PageRight():
-                    pass
+                    if self.page_num < 4:
+                        self.page_num += 1
+                        root.help_screen_lbl.configure(image=self.help_pages[self.page_num])
+                        root.help_screen_lbl.update()
 
                 # Left
 
                 root.left_but_pic = tk.PhotoImage(file='img/left_help_35.png')
                 root.left_but_lbl = tk.Button(root, image=root.left_but_pic, bg='#000000', relief='flat',
-                                              command=PageLeft(),
+                                              command=PageLeft,
                                               bd=0)
                 root.left_but_lbl.place(x=20, y=682)
 
@@ -770,7 +779,7 @@ class Main:
 
                 root.right_but_pic = tk.PhotoImage(file='img/right_help_35.png')
                 root.right_but_lbl = tk.Button(root, image=root.right_but_pic, bg='#000000', relief='flat',
-                                               command=PageRight(),
+                                               command=PageRight,
                                                bd=0)
                 root.right_but_lbl.place(x=305, y=682)
 
@@ -890,12 +899,15 @@ class Main:
 
 # First login check
 
+welcome_back = "Welcome back!\r\nWe missed you :)\n\n\n\n" \
+               f"{cur_date} \r\nCashGate ver 1.0."
+
 if not first_log_today:
     Main(recent_position)
 elif not first_log_at:
     if leftovers != 0:
-        Intro(recent_position, 'u idit lol, ur mani stolen', 20, 'leftover start')
+        Intro(recent_position, welcome_back, 20, 'leftover start')
     else:
-        Intro(recent_position, 'u idit lol, ur mani stolen', 20)
+        Intro(recent_position, welcome_back, 20)
 else:
     Intro(recent_position)
