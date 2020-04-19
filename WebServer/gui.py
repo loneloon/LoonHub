@@ -75,18 +75,17 @@ class Main:
             if net.chat_feed != '':
                 token = net.chat_feed[-3:]  # token recovered from the message delivery
                 if token == '000':
-                    print('Server is shutting down!')
+                    print('\nServer is shutting down!')
                     self.sync_stop = True
                     token = ''
                 if token == '666':
-                    chat_feed += f"Server says:{net.chat_feed[:-3]}"
+                    chat_feed += f"\nServer says:{net.chat_feed[:-3]}"
                     token = ''
                     net.chat_feed = ''
                 else:
                     net.send(token)  # token sent back as a validation of receipt
                     token = ''  # token wiped
-                    chat_feed += net.chat_feed[
-                                 :-3]  # message stripped off its token and added to user's chat history/displayed
+                    chat_feed += f"\n{net.chat_feed[:-3]}"  # message stripped off its token and added to user's chat history/displayed
                     net.chat_feed = ''  # initial message wiped
 
             net.read()  # requesting to read the message feed, socket is locked unless the message exists to stop listening
