@@ -47,7 +47,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.gui (1)">
+  <component name="RunManager" selected="Python.client_Tkinter">
     <configuration name="client" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="WebServer" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -69,19 +69,19 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="gui (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="CashGate" />
+    <configuration name="client_Tkinter" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="WebServer" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/WebServer" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/gui.py" />
+      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/WebServer/client_Tkinter.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -132,7 +132,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="server_admin" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="WebServer" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -144,7 +144,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/WebServer/test.py" />
+      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/WebServer/server_admin.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -155,10 +155,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.gui (1)" />
-        <item itemvalue="Python.gui" />
+        <item itemvalue="Python.client_Tkinter" />
+        <item itemvalue="Python.server_admin" />
         <item itemvalue="Python.server" />
-        <item itemvalue="Python.test" />
+        <item itemvalue="Python.gui" />
         <item itemvalue="Python.client" />
       </list>
     </recent_temporary>

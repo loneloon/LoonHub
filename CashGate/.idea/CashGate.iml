@@ -11,7 +11,6 @@
     <orderEntry type="module" module-name="Serenity" />
     <orderEntry type="module" module-name="RawInput" />
     <orderEntry type="module" module-name="SunsetFalls" />
-    <orderEntry type="module" module-name="DiceEngine" />
     <orderEntry type="module" module-name="WebServer" />
   </component>
 </module>
