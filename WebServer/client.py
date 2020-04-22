@@ -12,6 +12,8 @@ class Network:
         self.state = self.connect()
         self.chat_feed = ''
 
+        self.client.setblocking(False)
+
     def getState(self):
         return self.state
 

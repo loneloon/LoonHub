@@ -14,9 +14,22 @@ time_sent = None
 last_sync = datetime.datetime.now()
 token = ''
 
+username = 'golden_goose66'
+
+chat_history = open("chat_history", "w")
+chat_history.write(f'Recorded on {str(datetime.datetime.now())[0:10]}\r\n')
+chat_history.close()
+
+hist_temp = []
 
 recent_position = "+550+250"
 
+def write_to_his(message):
+    global username
+
+    chat_history = open("chat_history", "a+")
+    chat_history.write(f"{str(datetime.datetime.now())[11:-7]}\r{message}\r\n")
+    chat_history.close()
 
 class Main:
     def __init__(self, orient):
@@ -47,20 +60,39 @@ class Main:
         root.glasses_button = tk.Button(root, image=root.glasses_button_pic, bg='#df7126', relief='flat')
         root.glasses_button.place(x=86, y=340, width=100, height=35)
 
-        root.chat_win = tk.Label(root, text=chat_feed, bg='black', fg='white', relief='flat',
-                                 font=('Arial', 12, 'bold'), compound='right', justify='right')
+        root.chat_win = tk.Label(root, text=chat_feed, bg='white', fg='black', relief='flat',
+                                 font=('Arial', 10, 'bold'), anchor='e', justify='right')
         root.chat_win.place(x=270, y=90, width=400, height=150)
 
-        root.chat_input = tk.Entry(root, bg='red', fg='white', relief='flat',
+        root.chat_input = tk.Entry(root, bg='white', fg='black', relief='flat',
                                    font=('Arial', 16, 'bold'))
         root.chat_input.place(x=270, y=270, width=400, height=50)
+
+        def HistoryUpdate():
+            global hist_temp, chat_feed
+
+            hist_temp = ['\n']
+
+            with open("chat_history", "r") as h:
+                tot = len(h.readlines())
+            with open("chat_history", "r") as h:
+                for idx, i in enumerate(h.readlines()):
+                    if tot > 5:
+                        if idx > (tot - 6):
+                            hist_temp.append(i)
+                    else:
+                        hist_temp.append(i)
+            h.close()
+
+            chat_feed = "\r".join(hist_temp)
 
         def Send():
             global message_sent, time_sent, chat_feed, user_input, token, print_cash
 
             print_cash = root.chat_input.get()
+            root.chat_input.delete(0, "end")
             if print_cash != '':
-                user_input += f'\n{print_cash}'
+                user_input += f'{print_cash}'
                 print_cash = ''
 
         root.send_button.configure(command=Send)
@@ -75,21 +107,23 @@ class Main:
             if net.chat_feed != '':
                 token = net.chat_feed[-3:]  # token recovered from the message delivery
                 if token == '000':
-                    print('\nServer is shutting down!')
+                    write_to_his(net.chat_feed[:-3])
                     self.sync_stop = True
                     token = ''
+                    net.chat_feed = ''
                 if token == '666':
-                    chat_feed += f"\nServer says:{net.chat_feed[:-3]}"
+                    write_to_his(net.chat_feed[:-3])
                     token = ''
                     net.chat_feed = ''
                 else:
                     net.send(token)  # token sent back as a validation of receipt
                     token = ''  # token wiped
-                    chat_feed += f"\n{net.chat_feed[:-3]}"  # message stripped off its token and added to user's chat history/displayed
+                    write_to_his(net.chat_feed[:-3])  # message stripped off its token and added to user's chat history/displayed
                     net.chat_feed = ''  # initial message wiped
 
             net.read()  # requesting to read the message feed, socket is locked unless the message exists to stop listening
 
+            HistoryUpdate()
             root.chat_win.configure(text=chat_feed)
             root.after(100, sync)
 
