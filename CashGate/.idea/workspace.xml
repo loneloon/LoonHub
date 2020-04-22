@@ -23,16 +23,16 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
-    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/WebServer" />
+    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/Palm_Tre3s" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\User\PycharmProjects\yura" />
       <recent name="C:\Users\User\PycharmProjects\WebServer" />
       <recent name="C:\Users\User\PycharmProjects\Serenity\room" />
       <recent name="C:\Users\User\PycharmProjects\RawInput" />
       <recent name="C:\Users\User\PycharmProjects\Countraining" />
-      <recent name="C:\Users\User\PycharmProjects\CashGate" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -47,7 +47,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.client_Tkinter">
+  <component name="RunManager" selected="Python.decode">
     <configuration name="client" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="WebServer" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -69,19 +69,40 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="client_Tkinter" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="WebServer" />
+    <configuration name="decode" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Palm_Tre3s" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/WebServer" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/Palm_Tre3s" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/WebServer/client_Tkinter.py" />
+      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/Palm_Tre3s/decode.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="encode" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Palm_Tre3s" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/Palm_Tre3s" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/Palm_Tre3s/encode.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -132,33 +153,12 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="server_admin" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="WebServer" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/WebServer" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/WebServer/server_admin.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.client_Tkinter" />
-        <item itemvalue="Python.server_admin" />
-        <item itemvalue="Python.server" />
+        <item itemvalue="Python.decode" />
+        <item itemvalue="Python.encode" />
         <item itemvalue="Python.gui" />
+        <item itemvalue="Python.server" />
         <item itemvalue="Python.client" />
       </list>
     </recent_temporary>
