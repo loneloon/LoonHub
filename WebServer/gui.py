@@ -1,7 +1,7 @@
 import tkinter as tk
 import datetime
 from client import Network
-
+import string
 
 net = Network()
 
@@ -17,19 +17,111 @@ token = ''
 username = 'golden_goose66'
 
 chat_history = open("chat_history", "w")
-chat_history.write(f'Recorded on {str(datetime.datetime.now())[0:10]}\r\n')
+chat_history.write(f'=Recorded on {str(datetime.datetime.now())[0:10]}=\r\n')
 chat_history.close()
+
+try:
+    lvl1codes = net.getCode()[:-3]
+    print(f'Got primary codes. Size: {len(lvl1codes)}')
+except:
+    print("No connection to server. Didn't get codes!")
+
+symbols = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ' + string.printable[:-4]
+pc_List = []
+pc_Dict = {}
+encoder_state = True
+
+
+def primary_code_to_list():
+    global pc_List
+
+    pc_List = []
+
+    c_line = ''
+
+    for i in lvl1codes:
+        if len(c_line) == 4:
+            pc_List.append(c_line)
+            c_line = ''
+        c_line += i
+
+
+def primary_codelist_to_dict():
+    global symbols, pc_List, pc_Dict
+
+    pc_Dict = {i: j for i, j in zip(pc_List, symbols)}
+
+
+try:
+    primary_code_to_list()
+    primary_codelist_to_dict()
+
+    print('Primary codes allocated')
+    print('Encoding enabled.')
+except:
+    encoder_state = False
+    print('Warning! Encoding was not enabled due to an internal error!\r\nENCODING IS OFF!')
+
+
+def prim_encode(text_input):
+    global pc_Dict
+
+    message = ''
+
+    for i in text_input:
+        for code, symb in pc_Dict.items():
+            if i == symb:
+                message += code
+
+    return message
+
+
+def prim_decode(message):
+    global pc_Dict, lines
+
+    readcode = True
+    translate = ''
+    line = ''
+
+    for i in message:
+        if i == '\n' or i == '\r':
+            translate += i
+        else:
+            if i == '=':
+                translate += i
+
+                if readcode:
+                    readcode = False
+                elif not readcode:
+                    readcode = True
+
+                continue
+            if not readcode:
+                translate += i
+            else:
+                if i in string.digits:
+                    line += i
+                if len(line) == 4:
+                    for j, k in pc_Dict.items():
+                        if line == j:
+                            translate += k
+                            line = ''
+
+    return translate
+
 
 hist_temp = []
 
 recent_position = "+550+250"
 
+
 def write_to_his(message):
     global username
 
     chat_history = open("chat_history", "a+")
-    chat_history.write(f"{str(datetime.datetime.now())[11:-7]}\r{message}\r\n")
+    chat_history.write(f"={str(datetime.datetime.now())[11:-7]}=\r{message}\r\n")
     chat_history.close()
+
 
 class Main:
     def __init__(self, orient):
@@ -84,7 +176,7 @@ class Main:
                         hist_temp.append(i)
             h.close()
 
-            chat_feed = "\r".join(hist_temp)
+            chat_feed = prim_decode("\r".join(hist_temp))
 
         def Send():
             global message_sent, time_sent, chat_feed, user_input, token, print_cash
@@ -92,13 +184,16 @@ class Main:
             print_cash = root.chat_input.get()
             root.chat_input.delete(0, "end")
             if print_cash != '':
-                user_input += f'{print_cash}'
+                if encoder_state:
+                    user_input += prim_encode(f'{print_cash}')
+                else:
+                    user_input += f'{print_cash}'
                 print_cash = ''
 
         root.send_button.configure(command=Send)
 
         def sync():
-            global message_sent, time_sent, chat_feed, user_input, token, print_cash
+            global message_sent, time_sent, chat_feed, user_input, token, print_cash, lvl1codes
 
             if user_input != '':
                 net.send(user_input)  # withheld messages are sent

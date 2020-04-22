@@ -6,6 +6,43 @@ import random
 import os
 import signal
 
+
+class LVL1crypt:
+    def __init__(self):
+        import string
+        import random
+        import datetime
+        # The following is an uneducated attempt of a slow multilevel encoding
+        # The following encoding is layered.
+        # 'maps' stand for code-symbol reference dictionaries at each level
+        # Levels are numbered in ascending order starting with the 1st primary level.
+
+        self.symbols = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ' + string.printable[:-4]
+
+
+        def spawn_codes(lib: string):
+            codes = []
+            while len(codes) < len(self.symbols):
+                code = str(random.randint(3789, 7891))
+                if code not in codes:
+                    codes.append(code)
+
+            check = True
+            for i in codes:
+                if codes.count(i) > 1:
+                    check = False
+                    print(i)
+
+            if check:
+                print("Codes generated. No copies!")
+            else:
+                print("Bad result. There are copies!")
+
+            return codes
+
+        self.primary_codes = spawn_codes(self.symbols)
+
+
 last_sync = datetime.datetime.now()
 
 server = "192.168.147.1"
@@ -31,15 +68,21 @@ s.listen(4)
 print(f"Welcome to the 'ShadowCat' chat server.\r\nCurrent time is {str(last_sync)[11:-7]}.\r\nThis particular version supports up to 4 connections\r\n")
 print("Server Started! Waiting for connection...")
 
+# Generating primary codes for current session
+encoding = LVL1crypt()
+lvl1codes = ''.join(encoding.primary_codes)
+
 
 def threaded_client(conn):
-    global last_sync, chat_cash, token, connections, tokens_recieved
+    global last_sync, chat_cash, token, connections, tokens_recieved, lvl1codes
 
-    conn.send(str.encode("Connected"))
+    conn.send(str.encode(lvl1codes+'reg'))
+    # conn.send(str.encode(lvl1codes + 'rev'))
+    print('\nPrimary codes sent.')
     reply = ""
     while True:
         try:
-            data = conn.recv(1024)
+            data = conn.recv(2048)
             reply = data.decode("utf-8")
 
             if '#obey' in reply:
