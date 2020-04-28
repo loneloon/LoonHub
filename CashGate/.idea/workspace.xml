@@ -23,7 +23,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
-    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/Palm_Tre3s" />
+    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/horse_race" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -47,20 +47,20 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.gui">
-    <configuration name="decode" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Palm_Tre3s" />
+  <component name="RunManager" selected="Python.AmazingRace">
+    <configuration name="AmazingRace" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="horse_race" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/Palm_Tre3s" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/horse_race" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/Palm_Tre3s/decode.py" />
+      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/horse_race/AmazingRace.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -69,19 +69,19 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="encode" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Palm_Tre3s" />
+    <configuration name="ArithMeta" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ElTigre" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/Palm_Tre3s" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/ElTigre" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/Palm_Tre3s/encode.py" />
+      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/ElTigre/ArithMeta.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -111,19 +111,19 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="server" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="WebServer" />
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="horse_race" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/WebServer" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/horse_race" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/WebServer/server.py" />
+      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/horse_race/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -155,11 +155,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.AmazingRace" />
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python.ArithMeta" />
         <item itemvalue="Python.gui" />
         <item itemvalue="Python.test" />
-        <item itemvalue="Python.server" />
-        <item itemvalue="Python.encode" />
-        <item itemvalue="Python.decode" />
       </list>
     </recent_temporary>
   </component>

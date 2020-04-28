@@ -14,5 +14,7 @@
     <orderEntry type="module" module-name="WebServer" />
     <orderEntry type="module" module-name="yura" />
     <orderEntry type="module" module-name="Palm_Tre3s" />
+    <orderEntry type="module" module-name="ElTigre" />
+    <orderEntry type="module" module-name="horse_race" />
   </component>
 </module>
