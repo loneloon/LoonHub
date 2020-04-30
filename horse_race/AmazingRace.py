@@ -3,6 +3,8 @@ import time
 import datetime
 #from horse_names import HorseScraper
 
+from write_to_xl import RecordResults as write_result
+
 import os
 
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
@@ -56,7 +58,7 @@ bg = pygame.image.load("img/track.jpeg")
 
 win = pygame.display.set_mode((scr_width, scr_height))
 
-pygame.display.set_caption("Horse track")
+pygame.display.set_caption("Amazing Race")
 
 race_ended = False
 
@@ -188,7 +190,17 @@ class Race:
 
         all_races.append(self.finish_time)
         print(f'And the winner is - {top_time[0]} with the top time of {top_time[1]} seconds!\r\n')
+        for i in horses:
+            if i[1].name == top_time[0]:
+                i[1].winner = True
 
+        pygame.time.delay(2000)
+
+        for horse in horses:
+            for result in self.finish_time:
+                if horse[1].name == result[0]:
+                    write_result(str(self.start_time), horse[1].name, result[1], horse[1].winner)
+                    horse[1].winner = False
 
 menu = True
 
