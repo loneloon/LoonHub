@@ -77,19 +77,19 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="AmazingRace" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="horse_race" />
+    <configuration name="loop" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="PoolProject" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/horse_race" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/PycharmProjects/PoolProject" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/horse_race/AmazingRace.py" />
+      <option name="SCRIPT_NAME" value="$USER_HOME$/PycharmProjects/PoolProject/loop.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -165,9 +165,9 @@
       <list>
         <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.test" />
+        <item itemvalue="Python.loop" />
         <item itemvalue="Python.1lesson" />
         <item itemvalue="Python.text_based" />
-        <item itemvalue="Python.AmazingRace" />
       </list>
     </recent_temporary>
   </component>
