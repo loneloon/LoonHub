@@ -18,5 +18,6 @@
     <orderEntry type="module" module-name="horse_race" />
     <orderEntry type="module" module-name="MachineLearningLesson" />
     <orderEntry type="module" module-name="PoolProject" />
+    <orderEntry type="module" module-name="TheSearch" />
   </component>
 </module>
