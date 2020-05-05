@@ -93,9 +93,9 @@ class Civ:
         self.x = random.randint(20, 800)
         self.y = 140
 
-        self.fan = random.randint(0,1)
+        self.fan = random.choice([True, False])
 
-        if self.fan != 0:
+        if self.fan:
             self.images = [pygame.image.load(f"img/fan/{i + 1}.png") for i in range(10)]
         else:
             self.images = [pygame.image.load(f"img/civ/{i + 1}.png") for i in range(10)]
@@ -248,9 +248,11 @@ while run:
 
     scared_ppl_counter = 0
 
+    fans = 0
+
     if shiro.cool > 0:
         for citizen in people:
-            if citizen.fan == 0:
+            if not citizen.fan:
                 if math.fabs(citizen.x - shiro.x) < 180:
                     if citizen.x - shiro.x > 0:
                         citizen.left = True
@@ -265,11 +267,11 @@ while run:
 
             if math.fabs(citizen.x - shiro.x) < 120:
                 if (citizen.left and not shiro.left) or (not citizen.left and shiro.left):
-                    if citizen.fan == 0:
+                    if not citizen.fan:
                         citizen.scared = True
             else:
                 if math.fabs(citizen.x - shiro.x) > 150:
-                    if citizen.fan == 0:
+                    if not citizen.fan:
                         citizen.scared = False
                     else:
                         if citizen.left and shiro.left:
@@ -279,6 +281,9 @@ while run:
 
             if citizen.scared:
                 scared_ppl_counter += 1
+
+            if citizen.fan:
+                fans += 1
     else:
         for citizen in people:
             if citizen.fan == 0:
