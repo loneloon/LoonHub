@@ -119,11 +119,11 @@ class Problem:
 
         if key is not None:
             self.answer += key
-            problems.input_cd += 3
+            problems.input_cd += 4
 
         if delete is not None:
             self.answer = self.answer[:-1]
-            problems.input_cd += 2
+            problems.input_cd += 3
 
         self.prob_string = f'{self.left} {self.op} {self.right} = {self.answer}'
 
@@ -146,6 +146,7 @@ class Character:
         self.shot_unprocessed = False
         self.shoot_frames_turn = 0
         self.ev_frames_turn = 0
+        self.stricken = False
 
         self.bot_attack_sync = datetime.datetime.now()
 
@@ -274,12 +275,32 @@ class Character:
                         pygame.time.delay(50)
                 win.blit(self.evade_frames[self.ev_frames_turn], (self.x, self.y))
 
+    def rollback(self):
+        if self.char == 'player':
+            if self.stricken:
+                if self.x > -170:
+                    self.x -= 4
+                else:
+                    self.stricken = False
+            else:
+                if self.x < -150:
+                    self.x += 2
+        elif self.char == 'bot':
+            if self.stricken:
+                if self.x < 560:
+                    self.x += 4
+                else:
+                    self.stricken = False
+            else:
+                if self.x > 540:
+                    self.x -= 2
+
 
     def recycle(self):
         if self.char == 'bot':
             if self.health <= 0:
                 if self.x < 1000:
-                    self.x += 5
+                    self.x += 3
                 else:
                     self.dead = True
                     self.stand_frames_idx_turn = 0
@@ -290,9 +311,13 @@ class Character:
                     self.shoot_frames_turn = 0
                     self.ev_frames_turn = 0
                     self.bot_attack_sync = datetime.datetime.now()
+                    self.health = 100
             else:
-                if self.x > 540:
-                    self.x -= 5
+                if self.dead:
+                    if self.x > 540:
+                        self.x -= 5
+                    else:
+                        self.dead = False
         elif self.char == 'player':
             if self.health <= 0 and not self.dead:
                 trainer.frames = 0
@@ -595,6 +620,7 @@ def display_refresh():
     if gunner.isShooting and gunner.shoot_frames_turn == 15 and gunner.stand_pass == 0:
         if bot.health > 0:
             bot.health -= 20
+            bot.stricken = True
             for n in range(random.randint(2, 10)):
                 all_trash.append(Particles())
 
@@ -734,15 +760,14 @@ while run:
                 bot.shot_unprocessed = False
             else:
                 gunner.health -= 20
+                gunner.stricken = True
                 bot.shot_unprocessed = False
 
+    bot.rollback()
+    gunner.rollback()
 
     gunner.recycle()
     bot.recycle()
-
-    if bot.dead:
-        bot.health = 100
-        bot.dead = False
 
     display_refresh()
 
