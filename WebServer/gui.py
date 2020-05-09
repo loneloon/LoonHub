@@ -129,34 +129,34 @@ class Main:
 
         root = tk.Tk()
 
-        root.main_lbl = tk.PhotoImage(file='img/body.png')
+        root.main_lbl = tk.PhotoImage(file='img/body2.png')
 
-        root.label = tk.Label(root, image=root.main_lbl, bg='#CD0074')
+        root.label = tk.Label(root, image=root.main_lbl, bg='#000909')
         root.label.place(x=0, y=0, relwidth=1, relheight=1)
         root.overrideredirect(True)
         root.geometry(orient)
         root.lift()
         root.wm_attributes("-topmost", True)
-        root.wm_attributes("-transparentcolor", "#CD0074")
+        root.wm_attributes("-transparentcolor", "#000909")
         root.label.pack()
 
         root.send_button_pic = tk.PhotoImage(file='img/send.png')
-        root.send_button = tk.Button(root, image=root.send_button_pic, bg='#df7126', relief='flat')
-        root.send_button.place(x=497, y=340, width=187, height=52)
+        root.send_button = tk.Button(root, image=root.send_button_pic, bg='#002020', relief='flat', activebackground='#002020')
+        root.send_button.place(x=497, y=340, width=130, height=50)
 
         root.key_button_pic = tk.PhotoImage(file='img/key.png')
-        root.key_button = tk.Button(root, image=root.key_button_pic, bg='#df7126', relief='flat')
-        root.key_button.place(x=86, y=272, width=102, height=49)
+        root.key_button = tk.Button(root, image=root.key_button_pic, bg='#002020', relief='flat', activebackground='#002020')
+        #  root.key_button.place(x=86, y=272, width=102, height=49)
 
         root.glasses_button_pic = tk.PhotoImage(file='img/glasses.png')
-        root.glasses_button = tk.Button(root, image=root.glasses_button_pic, bg='#df7126', relief='flat')
-        root.glasses_button.place(x=86, y=340, width=100, height=35)
+        root.glasses_button = tk.Button(root, image=root.glasses_button_pic, bg='#002020', relief='flat', activebackground='#002020')
+        #  root.glasses_button.place(x=86, y=340, width=100, height=35)
 
-        root.chat_win = tk.Label(root, text=chat_feed, bg='white', fg='black', relief='flat',
+        root.chat_win = tk.Label(root, text=chat_feed, bg='#004c41', fg='#def2ff', relief='flat',
                                  font=('Arial', 10, 'bold'), anchor='e', justify='right')
         root.chat_win.place(x=270, y=90, width=400, height=150)
 
-        root.chat_input = tk.Entry(root, bg='white', fg='black', relief='flat',
+        root.chat_input = tk.Entry(root, bg='#004c41', fg='#def2ff', relief='flat',
                                    font=('Arial', 16, 'bold'))
         root.chat_input.place(x=270, y=270, width=400, height=50)
 
@@ -228,9 +228,9 @@ class Main:
             root.destroy()
 
         root.exit_lbl = tk.PhotoImage(file='img/exit.png')
-        root.exit = tk.Button(image=root.exit_lbl, bg='#df7126', relief='flat', command=Exit)
+        root.exit = tk.Button(image=root.exit_lbl, bg='#002020', relief='flat', command=Exit)
         root.exit.place(x=656, y=25, width=41, height=45)
-        root.exit.configure(activebackground='#000000')
+        root.exit.configure(activebackground='#002020')
 
         # Блок описывающий перетаскивание основного окна курсором
 
@@ -255,9 +255,9 @@ class Main:
             root.geometry("+%s+%s" % (x, y))
             self.sync_stop = False
 
-        root.bind("<ButtonPress-1>", StartMove)
-        root.bind("<ButtonRelease-1>", StopMove)
-        root.bind("<B1-Motion>", OnMotion)
+        root.label.bind("<ButtonPress-1>", StartMove)
+        root.label.bind("<ButtonRelease-1>", StopMove)
+        root.label.bind("<B1-Motion>", OnMotion)
 
         if not self.sync_stop:
             sync()
