@@ -211,7 +211,7 @@ class Character:
     def shoot(self):
         if self.isShooting:
             if self.char == 'player':
-                if not timer.start and (self.health > 0):
+                if not timer.start and (self.health > 0 or self.shoot_frames_turn > 12):
                     if self.stand_pass < self.stand_pass_max and (self.shoot_frames_turn < 13 or self.shoot_frames_turn > 16):
                         self.stand_pass += 1
                     else:
@@ -225,8 +225,12 @@ class Character:
                     if self.shoot_frames_turn > 13 and self.shoot_frames_turn < 21:
                         win.blit(self.beam_frames[self.shoot_frames_turn-13], (self.x+460, self.y))
                     win.blit(self.shoot_frames[self.shoot_frames_turn], (self.x, self.y))
+                else:
+                    self.isShooting = False
+                    self.stand_pass = 0
+                    self.shoot_frames_turn = 0
             elif self.char == 'bot':
-                if not timer.start and (self.health > 0):
+                if not timer.start and (self.health > 0 or self.shoot_frames_turn > 26):
                     if self.stand_pass < self.stand_pass_max and (self.shoot_frames_turn < 27 or self.shoot_frames_turn > 32):
                         self.stand_pass += 1
                     else:
@@ -677,7 +681,7 @@ while run:
             isFullscreen = False
             win = pygame.display.set_mode((scr_width, scr_height))
 
-    if not timer.start and (not gunner.isShooting or gunner.shoot_frames_turn > 31) and not gunner.isEvading and not bot.dead:
+    if not timer.start and (not gunner.isShooting or gunner.shoot_frames_turn > 31) and not gunner.isEvading and not bot.dead and gunner.health > 0:
         if keys[pygame.K_SPACE]:
             gunner.isShooting = False
             gunner.shoot_frames_turn = 0
