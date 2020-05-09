@@ -64,7 +64,7 @@ class Problem:
         self.array = []
         self.op = ''
         self.input_idle = False
-        self.input_cd = 20
+        self.input_cd = 0
 
     def choose_op(self):
         return random.choice(self.operations)
@@ -119,7 +119,7 @@ class Problem:
 
         if key is not None:
             self.answer += key
-            problems.input_cd += 4
+            problems.input_cd += 3
 
         if delete is not None:
             self.answer = self.answer[:-1]
@@ -165,6 +165,7 @@ class Character:
             self.shoot_frames = [pygame.image.load(f'{self.char}/shoot/0dam/{i + 1}.png') for i in range(47)]
             self.shoot_frames1 = [pygame.image.load(f'{self.char}/shoot/1dam/{i + 1}.png') for i in range(47)]
             self.shoot_frames2 = [pygame.image.load(f'{self.char}/shoot/2dam/{i + 1}.png') for i in range(47)]
+            self.shoot_frames3 = [pygame.image.load(f'{self.char}/shoot/3dam/{i + 1}.png') for i in range(47)]
 
             self.beam_frames = [pygame.image.load(f'beam/{i + 1}.png') for i in range(9)]
 
@@ -241,8 +242,10 @@ class Character:
                     frames2use = self.shoot_frames
                 elif self.health > 40:
                     frames2use = self.shoot_frames1
-                else:
+                elif self.health > 0:
                     frames2use = self.shoot_frames2
+                else:
+                    frames2use = self.shoot_frames3
 
                 if self.shoot_frames_turn > 26 and self.shoot_frames_turn < 35:
                     win.blit(self.beam_frames[self.shoot_frames_turn-26], (self.x-780, self.y+210))
@@ -679,7 +682,7 @@ while run:
             gunner.isShooting = False
             gunner.shoot_frames_turn = 0
             gunner.stand_pass = 0
-            gunner.stand_frames_idx_turn = 14
+            #gunner.stand_frames_idx_turn = 12
 
             timer.start = True
             timer.type = 'problem'
