@@ -479,7 +479,7 @@ class Trainer:
         self.new_adv()
 
         if not timer.start:
-            if self.fr_pass < 7:
+            if self.fr_pass < 10:
                 self.fr_pass += 1
             else:
                 self.fr_pass = 0
@@ -498,13 +498,13 @@ class Trainer:
 
     def final_tip(self):
         if self.frames < 13:
-            if self.fr_pass < 4:
+            if self.fr_pass < 7:
                 self.fr_pass += 1
             else:
                 self.fr_pass = 0
                 self.frames += 1
         elif self.frames >= 13:
-            if self.fr_pass < 7:
+            if self.fr_pass < 9:
                 self.fr_pass += 1
             else:
                 self.fr_pass = 0
@@ -645,7 +645,7 @@ def display_refresh():
 
 
 while run:
-    pygame.time.delay(10)
+    pygame.time.delay(7)
 
     if all_trash != []:
         for idx, particle in enumerate(all_trash):
@@ -725,8 +725,8 @@ while run:
         elif keys[pygame.K_BACKSPACE]:
             problems.type(key=None, delete=True)
 
-    if keys[pygame.K_RETURN] and timer.start:
-        solve_outer()
+        if keys[pygame.K_RETURN] and timer.start:
+            solve_outer()
 
     if bot.isShooting and bot.shot_unprocessed:
         if 26 < bot.shoot_frames_turn < 32:
