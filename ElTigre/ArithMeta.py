@@ -278,22 +278,22 @@ class Character:
     def rollback(self):
         if self.char == 'player':
             if self.stricken:
-                if self.x > -170:
-                    self.x -= 4
+                if self.x > -160:
+                    self.x -= 2
                 else:
                     self.stricken = False
             else:
                 if self.x < -150:
-                    self.x += 2
+                    self.x += 1
         elif self.char == 'bot':
             if self.stricken:
-                if self.x < 560:
-                    self.x += 4
+                if self.x < 550:
+                    self.x += 2
                 else:
                     self.stricken = False
             else:
                 if self.x > 540:
-                    self.x -= 2
+                    self.x -= 1
 
 
     def recycle(self):
