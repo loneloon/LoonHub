@@ -7,6 +7,8 @@ recent_pos = "+450+250"
 class Main:
     def __init__(self, recent_pos):
 
+        self.fed = False
+
         self.root = tk.Tk()
         self.root.wall_lbl = tk.PhotoImage(file='gui/nokey.png')
         self.root.wall_lbl2 = tk.PhotoImage(file='gui/wkey.png')
@@ -19,17 +21,21 @@ class Main:
         self.root.wm_attributes("-transparentcolor", "green")
         self.root.label.pack()
 
-        trans_butt_pic = tk.PhotoImage(file="gui/trans.png")
-        trans_butt = tk.Button(self.root, image=trans_butt_pic, width=240, height=70, bg="#8338ec", relief='flat', activebackground="#8338ec", command=self.translate)
-        trans_butt.place(x=33, y=392)
+        self.trans_butt_pic = tk.PhotoImage(file="gui/trans.png")
+        self.trans_butt = tk.Button(self.root, image=self.trans_butt_pic, width=240, height=70, bg="#8338ec", relief='flat', activebackground="#8338ec", command=self.translate)
+        self.trans_butt.place(x=33, y=392)
 
-        enc_butt_pic = tk.PhotoImage(file="gui/enc.png")
-        enc_butt = tk.Button(self.root, image=enc_butt_pic, width=240, height=70, bg="#8338ec", relief='flat', activebackground="#8338ec", command=self.encode)
-        enc_butt.place(x=307, y=392)
+        self.enc_butt_pic = tk.PhotoImage(file="gui/enc.png")
+        self.enc_butt = tk.Button(self.root, image=self.enc_butt_pic, width=240, height=70, bg="#8338ec", relief='flat', activebackground="#8338ec", command=self.encode)
+        self.enc_butt.place(x=307, y=392)
 
-        feed_butt_pic = tk.PhotoImage(file="gui/feed.png")
-        feed_butt = tk.Button(self.root, image=feed_butt_pic, width=240, height=70, bg="#8338ec", relief='flat', activebackground="#8338ec", command=self.feed)
-        feed_butt.place(x=588, y=392)
+        self.feed_butt_pic = tk.PhotoImage(file="gui/feed.png")
+        self.feed_butt = tk.Button(self.root, image=self.feed_butt_pic, width=240, height=70, bg="#8338ec", relief='flat', activebackground="#8338ec", command=self.feed)
+        self.feed_butt.place(x=588, y=392)
+
+        if not self.fed:
+            self.trans_butt.configure(state='disabled')
+            self.enc_butt.configure(state='disabled')
 
 
         def Exit():
@@ -41,13 +47,10 @@ class Main:
         self.root.exit.configure(disabledforeground='#8338ec', activebackground='#8338ec', width=45, height=45)
 
 
-        def get_input(event):
-            message = self.root.textwin.get("1.0", 'end-1c')
-
         self.root.textwin = tk.Text(self.root, bg='#3f3f74', fg='#ffbe0b', font=('Arial', 20), relief='flat')
         self.root.textwin.place(x=40, y=130, width=505, height=225)
 
-        self.root.textwin.bind('<Escape>', get_input)
+        self.root.textwin.bind('<Escape>', Exit)
 
 
         def StartMove(event):
@@ -77,6 +80,9 @@ class Main:
         self.encode = PalmTrees(self.kirbs.ni, self.kirbs.san, self.kirbs.yon)
         self.root.label.configure(image=self.root.wall_lbl2)
         self.root.label.update()
+        self.fed = True
+        self.trans_butt.configure(state='norm')
+        self.enc_butt.configure(state='norm')
 
     def encode(self):
         self.message = self.root.textwin.get("1.0", 'end-1c')
@@ -108,9 +114,10 @@ class KirbyEnc:
         if self.san < self.ni:
             self.ni, self.san = self.san, self.ni
 
+        if (self.san - self.ni) < 1000:
+            self.san += (1000 - (self.san - self.ni))
+
         self.yon = scramble.kirby.sec_code
-
-
 
 
 test = Main(recent_pos)
