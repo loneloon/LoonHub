@@ -1,9 +1,12 @@
 
-
 class PalmLeaves:
     def __init__(self):
 
         from tkinter import filedialog as fd
+        import tkinter as tk
+
+        root = tk.Tk()
+        root.withdraw()
 
         self.text = ''
 
