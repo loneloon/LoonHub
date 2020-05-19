@@ -38,8 +38,12 @@ class Main:
             self.enc_butt.configure(state='disabled')
 
 
-        def Exit(event):
+        def Exit():
             self.root.destroy()
+
+        def kbExit(event):
+            self.root.destroy()
+
 
         self.root.exit_lbl = tk.PhotoImage(file='gui/exit.png')
         self.root.exit = tk.Button(image=self.root.exit_lbl, bg='#8338ec', relief='flat', command=Exit)
@@ -50,7 +54,7 @@ class Main:
         self.root.textwin = tk.Text(self.root, bg='#3f3f74', fg='#ffbe0b', font=('Arial', 20), relief='flat')
         self.root.textwin.place(x=40, y=130, width=505, height=225)
 
-        self.root.bind('<Escape>', Exit)
+        self.root.bind('<Escape>', kbExit)
 
 
         def StartMove(event):
