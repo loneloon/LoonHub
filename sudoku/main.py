@@ -163,7 +163,7 @@ class Ui_MainWindow(object):
         else:
             message1 = "Sorry, you've guessed incorrectly 3 times."
             message2 = "Good luck next time, friend!"
-        
+
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
         msg.setText(message1)
