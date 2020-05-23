@@ -60,6 +60,9 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(34)
 
+        mistake_font = QtGui.QFont()
+        mistake_font.setPointSize(24)
+
         self.onlyInt = QtGui.QIntValidator()
 
 
@@ -109,11 +112,15 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addWidget(self.checker, 10, 3, 1, 3)
 
         self.mistakes = []
+        self.mis_count = 0
 
         for i in range(3):
             self.mistakes.append(QtWidgets.QLabel(self.gridGroupBox))
             self.mistakes[-1].setObjectName(f"X:{i+1}")
-            self.mistakes[-1].setStyleSheet("background-color: rgb(12, 70, 105);")
+            self.mistakes[-1].setStyleSheet("background-color: rgb(12, 70, 105); color: rgb(255, 0, 0);")
+            self.mistakes[-1].setAlignment(QtCore.Qt.AlignCenter)
+            self.mistakes[-1].setFont(mistake_font)
+
             self.gridLayout_2.addWidget(self.mistakes[-1], 10, 6+i, 1, 1)
 
 
@@ -150,12 +157,26 @@ class Ui_MainWindow(object):
                 self.counter += 1
 
     def error(self):
+        if self.mis_count < 3:
+            message1 = "Sorry friend, it doesn't add up!"
+            message2 = 'Some number is incorrect.'
+        else:
+            message1 = "Sorry, you've guessed incorrectly 3 times."
+            message2 = "Good luck next time, friend!"
+        
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
-        msg.setText("Ooops!")
-        msg.setInformativeText('Some number is incorrect!')
+        msg.setText(message1)
+        msg.setInformativeText(message2)
         msg.setWindowTitle("Oh no!")
         msg.exec_()
+
+        if self.mis_count < 3:
+            self.mistakes[self.mis_count].setText('X')
+            self.mis_count += 1
+        else:
+            MainWindow.destroy()
+
 
     def victory(self):
         msg = QtWidgets.QMessageBox()
