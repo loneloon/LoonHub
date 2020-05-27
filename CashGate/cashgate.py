@@ -53,7 +53,10 @@ class Entry:
                 self.left4td = round(float(hist_imp[4]), 2)
             register.close()
         except FileNotFoundError:
+            hist = open("history", "w+")
+            hist.close()
             self.first_log_at = True
+            self.first_log_today = True
             print(
                 "Welcome to CashGate! I will help you organise your savings, control your spending and monitor your balance!")
 
