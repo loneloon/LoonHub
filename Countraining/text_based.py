@@ -24,6 +24,9 @@ class Game:
     def loop(self):
         global timeleft, solved
 
+        print("Try to solve as many problems as possible. You have 60 seconds!\n")
+        input("Press any key to start: \n")
+
         while timeleft > 0:
             result = self.Problems().new_problem(self.Problems().choose_op())
             if timeleft > 0:
@@ -84,10 +87,10 @@ class Game:
             self.timepassed = round((self.end - self.start), 2)
 
             if self.user_answer == self.result:
-                print('Correct!')
+                print('Correct!\n')
                 return [1, self.timepassed]
             else:
-                print('False!')
+                print('False!\n')
                 return [0, self.timepassed]
 
 
