@@ -26,7 +26,7 @@ class Leaf:
         return f"({self.symb}={self.value})"
 
 
-text = input("Введите строку, которую требуется закодировать: ")
+text = input("Enter a string that should be encoded: ")
 
 sym_dic = {i:text.count(i) for i in text}
 
