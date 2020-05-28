@@ -191,7 +191,7 @@ class Reg:
 
         root.pass_reg_ent = tk.Entry(root, fg='#fafbf6', background='#306082', selectbackground='#140226',
                                      selectforeground='#f1f3e7',
-                                     font=('Arial', 19), relief='flat')
+                                     font=('Arial', 19), relief='flat', show='*')
         root.pass_reg_ent.place(x=228, y=128, width=230, height=30)
 
         # Имя
