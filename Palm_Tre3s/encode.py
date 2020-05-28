@@ -70,14 +70,14 @@ class PalmTrees:
 
         timecode = str(datetime.datetime.now()).strip(' ').replace(':', '_')
 
-        key = open(r'C:\Users\User\PycharmProjects\Palm_Tre3s\out\key_%s' % timecode, 'a+')
+        key = open('out/key_%s' % timecode, 'a+')
 
         for i, j in map_lvl2.items():
             key.write(f'{i}:{j}\n')
 
         key.close()
 
-        message = open(r'C:\Users\User\PycharmProjects\Palm_Tre3s\out\message_%s' % timecode, 'a+')
+        message = open('out/message_%s' % timecode, 'a+')
 
         line = ''
 
@@ -93,6 +93,6 @@ class PalmTrees:
         message.close()
 
 
-message = 'I love palm trees. They are serene and loveless.'
+message = input("Enter the message for encryption: ")
 
 encode = PalmTrees(message)
