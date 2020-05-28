@@ -67,7 +67,7 @@ while counter < 50:
             self.x = random.randint(100, 400)
             self.y = random.randint(100, 400)
             self.rad = 13
-            self.vector = (random.randint(-4, 4), (random.randint(0, 2)), 0)
+            self.vector = (random.randint(-8, 8), 0, (random.randint(-8, 8)))
             self.collision = False
             self.time_sync = datetime.datetime.now()
             self.inapocket = False
@@ -90,36 +90,37 @@ while counter < 50:
                             self.inapocket = True
                         else:
                             self.x += self.vector[0]
-                            self.y += self.vector[0] * self.vector[1] + self.vector[2]
+                            self.y += self.vector[2]
                     elif self.x >= (left_top_border[0][0] + self.rad) and self.x <= (right_top_border[0][0] - self.rad):
                         self.x += self.vector[0]
-                        self.y += self.vector[0] * self.vector[1] + self.vector[2]
+                        self.y += self.vector[2]
                     else:
                         if self.y > left_top_border[0][1] and self.y < left_top_border[1][1]:
                             if self.x - self.rad < (left_top_border[0][0]):
                                 self.x = left_top_border[0][0] + self.rad
                             if self.x + self.rad >= right_top_border[0][0]:
                                 self.x = right_top_border[0][0] - self.rad
-                            self.vector = (self.vector[0] * (-0.8), -self.vector[1], 0)
+                            self.vector = (self.vector[0] * (-0.8), self.vector[1], self.vector[2])
                         elif self.y > left_bot_border[0][1] and self.y < left_bot_border[1][1]:
                             if self.x - self.rad < (left_top_border[0][0]):
                                 self.x = left_top_border[0][0] + self.rad
                             if self.x + self.rad >= right_top_border[0][0]:
                                 self.x = right_top_border[0][0] - self.rad
-                            self.vector = (self.vector[0] * (-0.8), -self.vector[1], 0)
+                            self.vector = (self.vector[0] * (-0.8), self.vector[1], self.vector[2])
                 else:
                     if self.y < (top_border[0][1] + self.rad):
                         self.y = top_border[0][1] + self.rad
                     if self.y > (bot_border[0][1] - self.rad):
                         self.y = bot_border[0][1] - self.rad
-                    self.vector = (self.vector[0] * (0.8), -(self.vector[1]), 0)
+                    self.vector = (self.vector[0] * (0.8), self.vector[1], -self.vector[2])
                 # ball slowing down
 
                 if (datetime.datetime.now() - self.time_sync).seconds > 1:
                     self.time_sync = datetime.datetime.now()
-                    self.vector = ((self.vector[0] * 0.7), self.vector[1], 0)
+                    self.vector = ((self.vector[0] * 0.7), self.vector[1], (self.vector[2] * 0.7))
                     if (self.vector[0] > -0.1 and self.vector[0] < 0.1):
                         self.vector = (0, self.vector[1], self.vector[2])
+                    if (self.vector[2] > -0.1 and self.vector[2] < 0.1):
                         self.vector = (self.vector[0], self.vector[1], 0)
 
 
@@ -127,7 +128,6 @@ while counter < 50:
     public_vectors = []
     ball_pos = []
     all_dist = []
-
 
     for n in range(5):
         balls.append(Ball())
@@ -152,17 +152,39 @@ while counter < 50:
 
         for idx, i in enumerate(all_dist):
             coll_count = 0
-            for idx2, j in enumerate(i):
+            for idx2, j in enumerate(i):  # where j is a distance between balls' centres
                 if type(j) != str:
-                    if j < 26:
+                    if j <= 26:
                         coll_count += 1
-                        balls[idx].collision = True
-                        balls[idx2].collision = True
+
+                        if not balls[idx].collision and not balls[idx2].collision:
+                            refl_vec_cntr = [(balls[idx].x + balls[idx2].x) / 2, (balls[idx].y + balls[idx2].y) / 2]
+
+                            refl_vec_1_vx = (-refl_vec_cntr[0] + balls[idx].x)
+                            refl_vec_1_vy = (-refl_vec_cntr[1] + balls[idx].y)
+
+                            refl_vec_2_vx = (-refl_vec_cntr[0] + balls[idx2].x)
+                            refl_vec_2_vy = (-refl_vec_cntr[1] + balls[idx2].y)
+
+                            # balls[idx].vector = (balls[idx].vector[0] + refl_vec_1_vx, balls[idx].vector[1], balls[idx].vector[2] + refl_vec_1_vy)
+                            # balls[idx2].vector = (balls[idx2].vector[0] + refl_vec_2_vx, balls[idx2].vector[1], balls[idx2].vector[2] + refl_vec_2_vy)
+
+                            print(balls[idx].vector, balls[idx2].vector)
+
+                            balls[idx].vector = ((balls[idx].vector[0] + refl_vec_1_vx)/6, balls[idx].vector[1],
+                                                 (balls[idx].vector[2] + refl_vec_1_vy)/6)
+                            balls[idx2].vector = ((balls[idx2].vector[0] + refl_vec_2_vx)/6, balls[idx2].vector[1],
+                                                  (balls[idx2].vector[2] + refl_vec_2_vy)/6)
+
+                            print(balls[idx].vector, balls[idx2].vector)
+
+                            balls[idx].collision = True
+                            balls[idx2].collision = True
+
             if coll_count == 0:
                 balls[idx].collision = False
 
         all_dist = []
-
 
 
     def redrawScreen():
@@ -198,18 +220,21 @@ while counter < 50:
             else:
                 pause = False
 
-
         if not pause:
             moving = 0
             for idx, ball in enumerate(balls):
                 if not ball.inapocket:
-                    public_vectors[idx] = ball.vector
+                    if not ball.collision:
+                        public_vectors[idx] = ball.vector
                     ball_pos[idx] = (ball.x, ball.y)
                     check_collision()
                     ball.move()
 
                     if ball.vector[0] != 0 or ball.vector[2] != 0:
                         moving += 1
+
+                else:
+                    del balls[idx]
 
             if moving == 0:
                 run = False
