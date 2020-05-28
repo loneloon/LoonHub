@@ -22,7 +22,7 @@ class PalmLeaves:
             except IndexError:
                 pass
 
-        print(len(self.text))
+        #print(len(self.text))
 
         k_path = pathbutton()
 
@@ -40,7 +40,7 @@ class PalmLeaves:
             except IndexError:
                 pass
 
-        print(key)
+        #print(key)
 
         line = ''
         broken = []
