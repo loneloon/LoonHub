@@ -1,7 +1,6 @@
 import os
 import datetime
 import random
-import shapely.geometry
 
 pause = False
 
