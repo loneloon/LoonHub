@@ -2,8 +2,148 @@ import tkinter as tk
 import datetime
 from client import Network
 import string
+import re
 
-net = Network()
+
+recent_position = "+550+250"
+
+exitbool = False
+
+serv_ip = "127.0.0.1"
+
+username = 'golden_goose66'
+
+class SetUp:
+    def __init__(self, orient):
+        root = tk.Tk()
+
+        root.main_lbl = tk.PhotoImage(file='img/body2set.png')
+
+        root.label = tk.Label(root, image=root.main_lbl, bg='#000909')
+        root.label.place(x=0, y=0, relwidth=1, relheight=1)
+        root.overrideredirect(True)
+        root.geometry(orient)
+        root.lift()
+        root.wm_attributes("-topmost", True)
+        root.wm_attributes("-transparentcolor", "#000909")
+        root.label.pack()
+
+        root.save_button_pic = tk.PhotoImage(file='img/save.png')
+
+        root.back_button_pic = tk.PhotoImage(file='img/back.png')
+
+        # ip bar
+
+        root.name_lbl = tk.Label(root, text='NICKNAME', bg='#004c41', fg='#def2ff', relief='flat',
+                                 font=('Arial', 18, 'bold'), anchor='e', justify='center')
+        root.name_lbl.place(x=274, y=119, width=140, height=40)
+
+        root.name_input = tk.Entry(root, bg='black', fg='#def2ff', relief='flat',
+                                 font=('Arial', 16, 'bold'))
+        root.name_input.place(x=420, y=122, width=224, height=34)
+
+        root.ip_lbl = tk.Label(root, text='SERVER IP', bg='#004c41', fg='#def2ff', relief='flat',
+                                 font=('Arial', 18, 'bold'), anchor='e', justify='center')
+        root.ip_lbl.place(x=274, y=193, width=140, height=40)
+
+        root.ip_input = tk.Entry(root, bg='black', fg='#def2ff', relief='flat',
+                                   font=('Arial', 16, 'bold'))
+        root.ip_input.place(x=420, y=196, width=224, height=34)
+
+        root.server_lbl = tk.Label(root, text='#POWER  ', bg='#004c41', fg='#def2ff', relief='flat',
+                               font=('Arial', 18, 'bold'), anchor='e', justify='center')
+        root.server_lbl.place(x=274, y=266, width=140, height=40)
+
+        root.server_input = tk.Entry(root, bg='black', fg='#def2ff', relief='flat',
+                                 font=('Arial', 16, 'bold'))
+        root.server_input.place(x=420, y=269, width=224, height=34)
+
+        def SaveConf():
+            global serv_ip, username
+
+            ip_check = re.compile('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
+
+            try:
+                if ip_check.match(root.ip_input.get()) is not None:
+                    serv_ip = root.ip_input.get()
+
+            except:
+                    serv_ip = "127.0.0.1"
+
+            try:
+                if 0 <= len(root.name_input.get()) <= 8:
+                    username = root.name_input.get()
+                elif len(root.name_input.get()) > 8:
+                    username = root.name_input.get()[:7]+"..."
+                else:
+                    username = "stray_cat"
+            except:
+                username = "stray_cat"
+
+
+        root.save_button = tk.Button(root, image=root.save_button_pic, bg='#002020', relief='flat',
+                                     activebackground='#002020', command=SaveConf)
+        root.save_button.place(x=517, y=340, width=130, height=50)
+
+        def Back():
+            global exitbool
+
+            exitbool = False
+
+            root.destroy()
+
+        root.back_button = tk.Button(root, image=root.back_button_pic, bg='#002020', relief='flat',
+                                     activebackground='#002020', command=Back)
+        root.back_button.place(x=367, y=340, width=130, height=50)
+
+        def Exit():
+            global exitbool
+
+            exitbool = True
+
+            root.destroy()
+
+        root.exit_lbl = tk.PhotoImage(file='img/exit.png')
+        root.exit = tk.Button(image=root.exit_lbl, bg='#002020', relief='flat', command=Exit)
+        root.exit.place(x=656, y=25, width=41, height=45)
+        root.exit.configure(activebackground='#002020')
+
+        # Блок описывающий перетаскивание основного окна курсором
+
+        def StartMove(event):
+            self.sync_stop = True
+            root.x = event.x
+            root.y = event.y
+            self.sync_stop = False
+
+        def StopMove(event):
+            self.sync_stop = True
+            root.x = None
+            root.y = None
+            self.sync_stop = False
+
+        def OnMotion(event):
+            self.sync_stop = True
+            deltax = event.x - root.x
+            deltay = event.y - root.y
+            x = root.winfo_x() + deltax
+            y = root.winfo_y() + deltay
+            root.geometry("+%s+%s" % (x, y))
+            self.sync_stop = False
+
+        root.label.bind("<ButtonPress-1>", StartMove)
+        root.label.bind("<ButtonRelease-1>", StopMove)
+        root.label.bind("<B1-Motion>", OnMotion)
+
+        root.mainloop()
+
+
+
+if not exitbool:
+    SetUp(recent_position)
+
+if not exitbool:
+    net = Network(serv_ip)
 
 print_cash = ''
 chat_feed = ''
@@ -14,11 +154,11 @@ time_sent = None
 last_sync = datetime.datetime.now()
 token = ''
 
-username = 'golden_goose66'
-
 chat_history = open("chat_history", "w")
 chat_history.write(f'=Recorded on {str(datetime.datetime.now())[0:10]}=\r\n')
 chat_history.close()
+
+print(f"Connecting to {serv_ip}...\r\n")
 
 try:
     lvl1codes = net.getCode()[:-3]
@@ -112,8 +252,6 @@ def prim_decode(message):
 
 hist_temp = []
 
-recent_position = "+550+250"
-
 
 def write_to_his(message):
     global username
@@ -141,15 +279,18 @@ class Main:
         root.label.pack()
 
         root.send_button_pic = tk.PhotoImage(file='img/send.png')
-        root.send_button = tk.Button(root, image=root.send_button_pic, bg='#002020', relief='flat', activebackground='#002020')
-        root.send_button.place(x=497, y=340, width=130, height=50)
+        root.send_button = tk.Button(root, image=root.send_button_pic, bg='#002020', relief='flat',
+                                     activebackground='#002020')
+        root.send_button.place(x=517, y=340, width=130, height=50)
 
         root.key_button_pic = tk.PhotoImage(file='img/key.png')
-        root.key_button = tk.Button(root, image=root.key_button_pic, bg='#002020', relief='flat', activebackground='#002020')
+        root.key_button = tk.Button(root, image=root.key_button_pic, bg='#002020', relief='flat',
+                                    activebackground='#002020')
         #  root.key_button.place(x=86, y=272, width=102, height=49)
 
         root.glasses_button_pic = tk.PhotoImage(file='img/glasses.png')
-        root.glasses_button = tk.Button(root, image=root.glasses_button_pic, bg='#002020', relief='flat', activebackground='#002020')
+        root.glasses_button = tk.Button(root, image=root.glasses_button_pic, bg='#002020', relief='flat',
+                                        activebackground='#002020')
         #  root.glasses_button.place(x=86, y=340, width=100, height=35)
 
         root.chat_win = tk.Label(root, text=chat_feed, bg='#004c41', fg='#def2ff', relief='flat',
@@ -185,9 +326,11 @@ class Main:
             root.chat_input.delete(0, "end")
             if print_cash != '':
                 if encoder_state:
-                    user_input += prim_encode(f'{print_cash}')
+                    user_input += prim_encode(f'{username}:  {print_cash}')
+                elif '#obey' in print_cash:
+                    user_input += f'{username}:  {print_cash}'
                 else:
-                    user_input += f'{print_cash}'
+                    user_input += f'{username}:  {print_cash}'
                 print_cash = ''
 
         root.send_button.configure(command=Send)
@@ -196,7 +339,7 @@ class Main:
             global message_sent, time_sent, chat_feed, user_input, token, print_cash, lvl1codes
 
             if user_input != '':
-                net.send(user_input)  # withheld messages are sent
+                net.send(f"{user_input}")  # withheld messages are sent
                 user_input = ''  # user's own message cash wiped
 
             if net.chat_feed != '':
@@ -213,7 +356,8 @@ class Main:
                 else:
                     net.send(token)  # token sent back as a validation of receipt
                     token = ''  # token wiped
-                    write_to_his(net.chat_feed[:-3])  # message stripped off its token and added to user's chat history/displayed
+                    write_to_his(
+                        net.chat_feed[:-3])  # message stripped off its token and added to user's chat history/displayed
                     net.chat_feed = ''  # initial message wiped
 
             net.read()  # requesting to read the message feed, socket is locked unless the message exists to stop listening
@@ -264,4 +408,5 @@ class Main:
         root.mainloop()
 
 
-Main(recent_position)
+if not exitbool:
+    Main(recent_position)
