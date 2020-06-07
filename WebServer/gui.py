@@ -293,8 +293,8 @@ class Main:
                                         activebackground='#002020')
         #  root.glasses_button.place(x=86, y=340, width=100, height=35)
 
-        root.chat_win = tk.Label(root, text=chat_feed, bg='#004c41', fg='#def2ff', relief='flat',
-                                 font=('Arial', 10, 'bold'), anchor='e', justify='right')
+        root.chat_win = tk.Text(root, bg='#004c41', fg='#def2ff', relief='flat',
+                                 font=('Arial', 10, 'bold'))
         root.chat_win.place(x=270, y=90, width=400, height=150)
 
         root.chat_input = tk.Entry(root, bg='#004c41', fg='#def2ff', relief='flat',
@@ -310,11 +310,7 @@ class Main:
                 tot = len(h.readlines())
             with open("chat_history", "r") as h:
                 for idx, i in enumerate(h.readlines()):
-                    if tot > 5:
-                        if idx > (tot - 6):
-                            hist_temp.append(i)
-                    else:
-                        hist_temp.append(i)
+                    hist_temp.append(i)
             h.close()
 
             chat_feed = prim_decode("\r".join(hist_temp))
@@ -360,10 +356,14 @@ class Main:
                         net.chat_feed[:-3])  # message stripped off its token and added to user's chat history/displayed
                     net.chat_feed = ''  # initial message wiped
 
+                HistoryUpdate()
+                root.chat_win.delete(1.0, 'end')
+                root.chat_win.insert('insert', chat_feed)
+                root.chat_win.see('end')
+
             net.read()  # requesting to read the message feed, socket is locked unless the message exists to stop listening
 
-            HistoryUpdate()
-            root.chat_win.configure(text=chat_feed)
+
             root.after(100, sync)
 
         # Кнопка Exit
