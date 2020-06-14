@@ -1,0 +1,181 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+  margin: 0;
+  display: inline;
+}
+
+
+.game {
+	background-image: url("bg.png");
+	background-size: 50vw;
+	height: 30vw;
+	background-repeat: no-repeat;
+	background-position: 50% 0vw;
+	display: flex;
+	justify-content: center;
+}
+
+
+.button {
+    background-color: #6abe30;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    margin: 5vw;
+    margin-top: 0;
+    width: 10vw;
+    overflow: hidden;
+    box-sizing: border-box;
+    text-align: center;
+    font-family: sans-serif;
+    color: aliceblue;
+    font-size: 1.5vw;
+}
+
+.button_pad {
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin-top: 2%;
+
+}
+
+.score_panel {
+  display: flex;
+  padding-top: 2vw;
+  margin-bottom: -5vw;
+  padding-left: 30vw;
+  justify-content: center;
+  
+}
+
+.score {
+  padding-right: 2vw;
+  padding-top: 0;
+  font-family: sans-serif;
+  font-size: 1.8vw;
+  display:flex;justify-content:flex-end;align-items:center;
+}
+
+.hp {
+  display:flex;justify-content:center;align-items:center;
+}
+
+.hp img{
+  padding-right: 0.3vw;
+  margin: 0;
+  width: 2vw;
+
+}
+
+.fox img{
+	width: 16vw;
+	margin-left: 25.5vw;
+	margin-right: 58.5vw;
+	margin-top: 16vw;
+}
+
+.obstacle img{
+	width: 5vw;
+	margin-left: -31vw;
+	margin-top: 18.5vw;
+}
+
+.blink-1 {
+	-webkit-animation: blink-1 0.6s both;
+	        animation: blink-1 0.6s both;
+}
+
+.jello-horizontal {
+	-webkit-animation: jello-horizontal 0.9s both;
+	        animation: jello-horizontal 0.9s both;
+}
+
+
+@-webkit-keyframes jello-horizontal {
+  0% {
+    -webkit-transform: scale3d(1, 1, 1);
+            transform: scale3d(1, 1, 1);
+  }
+  30% {
+    -webkit-transform: scale3d(1.25, 0.75, 1);
+            transform: scale3d(1.25, 0.75, 1);
+  }
+  40% {
+    -webkit-transform: scale3d(0.75, 1.25, 1);
+            transform: scale3d(0.75, 1.25, 1);
+  }
+  50% {
+    -webkit-transform: scale3d(1.15, 0.85, 1);
+            transform: scale3d(1.15, 0.85, 1);
+  }
+  65% {
+    -webkit-transform: scale3d(0.95, 1.05, 1);
+            transform: scale3d(0.95, 1.05, 1);
+  }
+  75% {
+    -webkit-transform: scale3d(1.05, 0.95, 1);
+            transform: scale3d(1.05, 0.95, 1);
+  }
+  100% {
+    -webkit-transform: scale3d(1, 1, 1);
+            transform: scale3d(1, 1, 1);
+  }
+}
+@keyframes jello-horizontal {
+  0% {
+    -webkit-transform: scale3d(1, 1, 1);
+            transform: scale3d(1, 1, 1);
+  }
+  30% {
+    -webkit-transform: scale3d(1.25, 0.75, 1);
+            transform: scale3d(1.25, 0.75, 1);
+  }
+  40% {
+    -webkit-transform: scale3d(0.75, 1.25, 1);
+            transform: scale3d(0.75, 1.25, 1);
+  }
+  50% {
+    -webkit-transform: scale3d(1.15, 0.85, 1);
+            transform: scale3d(1.15, 0.85, 1);
+  }
+  65% {
+    -webkit-transform: scale3d(0.95, 1.05, 1);
+            transform: scale3d(0.95, 1.05, 1);
+  }
+  75% {
+    -webkit-transform: scale3d(1.05, 0.95, 1);
+            transform: scale3d(1.05, 0.95, 1);
+  }
+  100% {
+    -webkit-transform: scale3d(1, 1, 1);
+            transform: scale3d(1, 1, 1);
+  }
+}
+
+
+
+@-webkit-keyframes blink-1 {
+  0%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+@keyframes blink-1 {
+  0%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+
