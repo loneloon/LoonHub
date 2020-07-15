@@ -1,5 +1,5 @@
 import random, json
-
+import telebot
 
 class Quiz:
 
@@ -13,6 +13,8 @@ class Quiz:
         self.q_out = ''
         # self.run = False
         self.all = {}
+        self.keyboard2 = []
+
 
         # self.table = {
         # 'Стас':[0, 10],  # [actual, max]
@@ -65,6 +67,8 @@ class Quiz:
 
     def ask_back(self, id, message=None):
 
+        self.q_out = ''
+
         if self.all[id]['level'] < 2:
             if not self.all[id]['waiting']:
                 if self.all[id]['level'] == 0:
@@ -92,17 +96,35 @@ class Quiz:
         else:
             if not self.all[id]['waiting']:
                 counter = 1
+                self.keyboard2 = []
 
                 with open('json/curators.json', 'r', encoding='utf-8') as ct:
                     self.curators = json.load(ct)
 
+                with open('json/table.json', 'r', encoding='utf-8') as tb:
+                    self.table = json.load(tb)
+
+                print(self.curators)
+
+                for mood, mentor in self.curators.items():
+                    for key, val in mentor.items():
+                        for person in val:
+                            if self.table[person][0] == self.table[person][1]:
+                                val.remove(person)
+
+                json.dump(self.curators, open('json/curators.json', 'w+', encoding='utf-8'), indent=2,
+                          ensure_ascii=True)
+
                 for key, val in self.curators[self.all[id]['path']].items():
                     if val != []:
                         self.q_out += f'{counter}) {key}\n'
-                    else:
-                        del self.curators[key]
-
+                        self.keyboard2.append(str(counter))
                     counter += 1
+
+
+                    # else:
+                    #     del self.curators[self.all[id]['path']][key]
+
 
                 json.dump(self.curators, open('json/curators.json', 'w+', encoding='utf-8'), indent=2,
                           ensure_ascii=True)
