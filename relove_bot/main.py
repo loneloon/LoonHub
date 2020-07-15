@@ -25,7 +25,7 @@ class BotBase:
 
         self.q = quiz.Quiz()
 
-        with open('json/spy.json', 'r') as sd:
+        with open('json/spy.json', 'r', encoding='utf-8') as sd:
             self.spy_data = json.load(sd)
 
         @bot.message_handler(commands=['start'])
@@ -33,19 +33,29 @@ class BotBase:
 
             bot.send_message(message.chat.id, self.greeting)
 
+
+            if message.from_user.username not in self.spy_data.keys():
+                self.spy_data[message.from_user.username] = ""
+
+                json.dump(self.spy_data, open('json/spy.json', 'w+', encoding='utf-8'), indent=2,
+                          ensure_ascii=True)
+
         @bot.message_handler(commands=['quiz'])
         def quiz_thread(message):
 
-            self.tested = False
+
             coach = ''
 
             self.kb_1()
 
-            # for record in self.spy_data:
-            #     if record['user'] == message.from_user.username:
-            #         coach = record['curator']
-            #         self.tested = True
-            #         break
+            try:
+                if self.spy_data[message.from_user.username] != "":
+                    coach = self.spy_data[message.from_user.username]
+                    self.tested = True
+                else:
+                    self.tested = False
+            except:
+                self.tested = False
 
             if self.tested:
                 bot.send_message(message.chat.id, f'Вы уже выбрали куратора! Ваш куратор: {coach}')
@@ -62,104 +72,109 @@ class BotBase:
 
             self.kb_1()
 
-            if message.from_user.username.lower() in ['loneloon', 'kejloon']:
 
-                if self.q.all[message.chat.id]['run']:
-                    if not self.q.all[message.chat.id]['waiting']:
-                        reply = self.q.ask_back(id=message.chat.id)
+            if ('stats' in message.text.lower()) and (message.from_user.username.lower() in ['loneloon', 'kejloon', "Korobkovochka"]):
 
-                        if reply is None:
+                with open('json/spy.json', 'r', encoding='utf-8') as sd:
+                    self.spy_data = json.load(sd)
+
+                self.report = ''
+
+                self.u_all = len(self.spy_data)
+                self.u_tested = 0
+
+                for k, v in self.spy_data.items():
+                    if v != '':
+                        self.u_tested += 1
+
+                try:
+                    self.report += f'Прошли тест:{self.u_tested}/{self.u_all}\n\n'
+                except:
+                    self.report += f'Прошли тест:{0}/{0}\n\n'
+
+
+                for curator in self.q.table.keys():
+                    self.report += f'{curator} {self.q.table[curator]}: \n'
+                    for user, assig in self.spy_data.items():
+                        if curator == assig:
+                            self.report += f'@{user}\n'
+
+
+
+                bot.send_message(message.chat.id, f'❗СТАТИСТИКА❗\n{self.report}')
+            elif 'ты здесь?' in message.text.lower():
+                bot.send_message(message.chat.id, f'На месте! ✌')
+            else:
+
+                try:
+                    if self.q.all[message.chat.id]['run']:
+                        if not self.q.all[message.chat.id]['waiting']:
                             reply = self.q.ask_back(id=message.chat.id)
 
-                            if type(reply) == list and reply[0] == 'list':
-                                reply = reply[1]
+                            if reply is None:
+                                reply = self.q.ask_back(id=message.chat.id)
 
-                                self.kb_2()
+                                if type(reply) == list and reply[0] == 'list':
+                                    reply = reply[1]
 
-                                bot.send_message(message.chat.id, reply, reply_markup=self.keyboard2)
+                                    self.kb_2()
+
+                                    bot.send_message(message.chat.id, reply, reply_markup=self.keyboard2)
+                                else:
+
+                                    bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
                             else:
 
                                 bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
+
                         else:
-                            # if type(reply) == list and type(reply[0]) == str:
-                            #
-                            #     bot.send_message(message.chat.id, reply[1], reply_markup=telebot.types.ReplyKeyboardRemove())
-                            #     # bot.edit_message_reply_markup(message.chat.id, reply_markup=self.keyboard3)
-                            #
-                            #     coach = reply[0]
-                            #
-                            #     # json dump
-                            #
-                            #     with open('json/spy.json', 'r') as sd:
-                            #         self.spy_data = json.load(sd)
-                            #
-                            #     self.spy_data.append(
-                            #         {"user": message.from_user.username,
-                            #          "curator": coach,})
-                            #
-                            #     print(self.spy_data)
-                            #
-                            #     json.dump(self.spy_data, open('json/spy.json', 'w+'), indent=2, ensure_ascii=True)
-                            #
-                            #     self.q.all[message.chat.id]['run'] = False
-                            #     print(self.q.all)
-                            #     del self.q.all[message.chat.id]
-                            #     print(self.q.all)
-                            #
-                            #     bot.send_message(message.chat.id,
-                            #                      'Если у Вас остались какие-то вопросы наш администратор будет рад вам ответить!')
-                            # else:
+                            reply = self.q.ask_back(id=message.chat.id, message=message.text)
 
+                            if reply is None:
+                                reply = self.q.ask_back(id=message.chat.id)
 
-                            bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
+                                if type(reply) == list and reply[0] == 'list':
+                                    reply = reply[1]
 
-                    else:
-                        reply = self.q.ask_back(id=message.chat.id, message=message.text)
+                                    self.kb_2()
 
-                        if reply is None:
-                            reply = self.q.ask_back(id=message.chat.id)
+                                    bot.send_message(message.chat.id, reply, reply_markup=self.keyboard2)
 
-                            if type(reply) == list and reply[0] == 'list':
-                                reply = reply[1]
-
-                                self.kb_2()
-
-                                bot.send_message(message.chat.id, reply, reply_markup=self.keyboard2)
-
+                                else:
+                                    bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
                             else:
-                                bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
-                        else:
-                            if type(reply) == list and type(reply[0]) == str:
+                                if type(reply) == list and type(reply[0]) == str:
 
-                                bot.send_message(message.chat.id, reply[1],
-                                                 reply_markup=telebot.types.ReplyKeyboardRemove())
-                                # bot.edit_message_reply_markup(message.chat.id, reply_markup=self.keyboard3)
+                                    bot.send_message(message.chat.id, reply[1],
+                                                     reply_markup=telebot.types.ReplyKeyboardRemove())
 
-                                coach = reply[0]
 
-                                # json dump
+                                    coach = reply[0]
 
-                                with open('json/spy.json', 'r', encoding='utf-8') as sd:
-                                    self.spy_data = json.load(sd)
+                                    # json dump
 
-                                self.spy_data.append(
-                                    {"user": message.from_user.username,
-                                     "curator": coach, })
+                                    with open('json/spy.json', 'r', encoding='utf-8') as sd:
+                                        self.spy_data = json.load(sd)
 
-                                print(self.spy_data)
+                                    self.spy_data[message.from_user.username] = coach
 
-                                json.dump(self.spy_data, open('json/spy.json', 'w+', encoding='utf-8'), indent=2,
-                                          ensure_ascii=True)
+                                    print(self.spy_data)
 
-                                self.q.all[message.chat.id]['run'] = False
+                                    json.dump(self.spy_data, open('json/spy.json', 'w+', encoding='utf-8'), indent=2,
+                                              ensure_ascii=True)
 
-                                del self.q.all[message.chat.id]
-                                print(self.q.table)
+                                    self.q.all[message.chat.id]['run'] = False
 
-                                bot.send_message(message.chat.id,
-                                                 'Если у Вас остались какие-то вопросы наш администратор будет рад вам ответить!')
-                            else:
-                                bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
+                                    del self.q.all[message.chat.id]
+                                    print(self.q.table)
+
+                                    bot.send_message(message.chat.id,
+                                                     'Если у Вас остались какие-то вопросы наш администратор будет рад вам ответить!')
+                                else:
+                                    bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
+                except:
+                    pass
+
 
         # main loop
 
@@ -172,13 +187,16 @@ class BotBase:
         self.keyboard1.row('Да', 'Нет')
 
     def kb_2(self):
-        self.keyboard2 = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, row_width=5)
+        self.keyboard2 = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         print(self.q.keyboard2)
-        self.keyboard2.row()
+
         for i in self.q.keyboard2:
             self.keyboard2.add(i)
 
-
+    def kb_2_inline(self):
+        self.inl_2 = telebot.types.InlineKeyboardMarkup()
+        for i in self.q.keyboard2:
+            self.inl_2.row(telebot.types.InlineKeyboardButton(i, callback_data=i))
 
 while True:
     try:

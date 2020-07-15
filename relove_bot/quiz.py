@@ -15,6 +15,8 @@ class Quiz:
         self.all = {}
         self.keyboard2 = []
 
+        with open('json/table.json', 'r', encoding='utf-8') as tb:
+            self.table = json.load(tb)
 
         # self.table = {
         # 'Стас':[0, 10],  # [actual, max]
