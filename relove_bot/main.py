@@ -11,6 +11,7 @@ class BotBase:
 
         # self.activated = False
 
+        self.admin = 'Korobkovochka'
         self.greeting = '''
         Привет!
 
@@ -20,7 +21,24 @@ class BotBase:
 Ответь на несколько вопросов, которые приведут тебя к твоему будущему куратору, с которым работа на курсе будет проходить наиболее комфортно и эффективно.
 
 
-Нажми /quiz, чтобы начать
+Нажми /quiz, чтобы начать!
+
+Если возникнут трудности, нажми /help.
+        '''
+
+        self.help = f'''
+        Без паники!
+Давай возьмем ситуацию в свои руки.
+
+Я откликаюсь на следующие команды:
+/start - приветствие
+/quiz - пройти тест
+/help - помощь
+
+Если твой тест остановился или ты не получил ответа, повторный /quiz - сделает рестарт.
+
+Если у тебя возникли вопросы, на которые я не могу ответить:
+наш администратор @{self.admin} с радостью на них ответит!
         '''
 
         self.q = quiz.Quiz()
@@ -39,6 +57,11 @@ class BotBase:
 
                 json.dump(self.spy_data, open('json/spy.json', 'w+', encoding='utf-8'), indent=2,
                           ensure_ascii=True)
+
+        @bot.message_handler(commands=['help'])
+        def send_help(message):
+            bot.send_message(message.chat.id, self.help)
+
 
         @bot.message_handler(commands=['quiz'])
         def quiz_thread(message):
@@ -73,7 +96,7 @@ class BotBase:
             self.kb_1()
 
 
-            if ('stats' in message.text.lower()) and (message.from_user.username.lower() in ['loneloon', 'kejloon', "Korobkovochka"]):
+            if ('stats' in message.text.lower()) and (message.from_user.username.lower() in ['loneloon', 'kejloon', self.admin.lower()]):
 
                 with open('json/spy.json', 'r', encoding='utf-8') as sd:
                     self.spy_data = json.load(sd)
@@ -145,11 +168,12 @@ class BotBase:
                             else:
                                 if type(reply) == list and type(reply[0]) == str:
 
-                                    bot.send_message(message.chat.id, reply[1],
+                                    coach = reply[0]
+
+                                    bot.send_photo(message.chat.id, photo=open(f'photos/{coach}.jpg', 'rb'),
+                                                   caption=reply[1],
                                                      reply_markup=telebot.types.ReplyKeyboardRemove())
 
-
-                                    coach = reply[0]
 
                                     # json dump
 
@@ -169,7 +193,7 @@ class BotBase:
                                     print(self.q.table)
 
                                     bot.send_message(message.chat.id,
-                                                     'Если у Вас остались какие-то вопросы наш администратор будет рад вам ответить!')
+                                                     f'Если у Вас остались какие-либо вопросы, наш администратор @{self.admin} с радостью на них ответит!')
                                 else:
                                     bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
                 except:

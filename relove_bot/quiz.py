@@ -79,9 +79,9 @@ class Quiz:
                 elif self.all[id]['level'] == 1:
                     self.all[id]['waiting'] = True
                     if self.all[id]['path'] == '0':
-                        return 'Считаешь ли ты себя открытым человеком? (тем, кто легко может делиться не только своими внешними факторами жизни, но и своими мыслями, ощущениеями, мнением)'
+                        return 'Считаешь ли ты себя открытым человеком? (тем, кто легко может делиться не только своими внешними факторами жизни, но и своими мыслями, ощущениями, мнением)'
                     else:
-                        return 'Считаешь ли ты себя открытым человеком? (тем, кто легко может делиться не только своими внешними факторами жизни, но и своими мыслями, ощущениеями, мнением)'
+                        return 'Считаешь ли ты себя открытым человеком? (тем, кто легко может делиться не только своими внешними факторами жизни, но и своими мыслями, ощущениями, мнением)'
             else:
                 if message is not None:
                     self.all[id]['answer'] = message
@@ -89,12 +89,16 @@ class Quiz:
                 if self.all[id]['answer'] != '':
                     if 'да' in self.all[id]['answer'].lower():
                         self.all[id]['path'] += '0'
-                    else:
+                        self.all[id]['waiting'] = False
+                        self.all[id]['level'] += 1
+                    elif 'нет' in self.all[id]['answer'].lower():
                         self.all[id]['path'] += '1'
+                        self.all[id]['waiting'] = False
+                        self.all[id]['level'] += 1
 
                     self.all[id]['answer'] = ''
-                    self.all[id]['level'] += 1
-                    self.all[id]['waiting'] = False
+
+
         else:
             if not self.all[id]['waiting']:
                 counter = 1
@@ -131,7 +135,7 @@ class Quiz:
                 json.dump(self.curators, open('json/curators.json', 'w+', encoding='utf-8'), indent=2,
                           ensure_ascii=True)
 
-                self.q_out = 'Выбери тип кураторства,который наиболее актуален для твоего запроса\n\n' + self.q_out
+                self.q_out = 'Выбери тип кураторства, который наиболее актуален для твоего запроса:\n\n' + self.q_out
                 self.all[id]['waiting'] = True
                 return ['list', self.q_out]
             else:
