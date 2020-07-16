@@ -1,13 +1,35 @@
 import telebot
 import quiz
 import json
+from threading import Timer
+import time
+
+till_restart = 60
+
+token='1271548938:AAGIVXqquLWCAcwyolSwNr5RDcIYvMmQrc4'
+
+bot = telebot.TeleBot(token)
+
+def time_out():
+    global till_restart
+    bot.stop_polling()
+    time.sleep(5)
+
+
+def res():
+
+    try:
+        BotBase()
+    except:
+        BotBase()
 
 
 class BotBase:
+    global bot
 
-    def __init__(self, token):
+    def __init__(self):
 
-        bot = telebot.TeleBot(token)
+
 
         # self.activated = False
 
@@ -64,7 +86,7 @@ class BotBase:
                     self.spy_data[f"tg://user?id={message.from_user.id}"] = ""
 
                     json.dump(self.spy_data, open('json/spy.json', 'w+', encoding='utf-8'), indent=2,
-                          ensure_ascii=True)
+                              ensure_ascii=True)
 
         @bot.message_handler(commands=['help'])
         def send_help(message):
@@ -85,7 +107,8 @@ class BotBase:
                 self.q.ask_back(id=call.message.chat.id)
                 edit_message_callback(call, self.q.all[call.message.chat.id]['coach'])
 
-                bot.send_photo(call.message.chat.id, photo=open(f'photos/{self.q.all[call.message.chat.id]["coach"]}.jpg', 'rb'),
+                bot.send_photo(call.message.chat.id,
+                               photo=open(f'photos/{self.q.all[call.message.chat.id]["coach"]}.jpg', 'rb'),
                                caption=f"Спасибо за ваши ответы!\nВашим куратором будет {self.q.all[call.message.chat.id]['coach']}",
                                reply_markup=telebot.types.ReplyKeyboardRemove())
 
@@ -95,11 +118,13 @@ class BotBase:
                     self.spy_data = json.load(sd)
 
                 if self.q.all[call.message.chat.id]['json'].from_user.username is not None:
-                    self.spy_data[self.q.all[call.message.chat.id]['json'].from_user.username] = self.q.all[call.message.chat.id]['coach']
+                    self.spy_data[self.q.all[call.message.chat.id]['json'].from_user.username] = \
+                    self.q.all[call.message.chat.id]['coach']
                     bot.send_message(chat_id=87829324,
                                      text=f"@{self.q.all[call.message.chat.id]['json'].from_user.username} распределен к куратору {self.q.all[call.message.chat.id]['coach']}!")
                 else:
-                    self.spy_data[f"tg://user?id={self.q.all[call.message.chat.id]['json'].from_user.id}"] = self.q.all[call.message.chat.id]['coach']
+                    self.spy_data[f"tg://user?id={self.q.all[call.message.chat.id]['json'].from_user.id}"] = \
+                    self.q.all[call.message.chat.id]['coach']
                     bot.send_message(chat_id=87829324,
                                      text=f"tg://user?id={self.q.all[call.message.chat.id]['json'].from_user.id} (без юзернэйма) распределен к куратору {self.q.all[call.message.chat.id]['coach']}!")
 
@@ -119,7 +144,6 @@ class BotBase:
                 bot.send_message(call.message.chat.id,
                                  f'Если у Вас остались какие-либо вопросы, наш администратор @{self.admin} с радостью на них ответит!')
 
-
         def edit_message_callback(call, sel):
             if call.message:
                 bot.edit_message_text(
@@ -137,9 +161,6 @@ class BotBase:
                     parse_mode='HTML'
                 )
 
-
-
-
         @bot.message_handler(commands=['quiz'])
         def quiz_thread(message):
 
@@ -147,7 +168,6 @@ class BotBase:
                 self.spy_data = json.load(sd)
 
             coach = ''
-
 
             try:
                 if message.from_user.username is not None:
@@ -180,8 +200,8 @@ class BotBase:
         @bot.message_handler(content_types=['text'])
         def send_text(message):
 
-
-            if ('stats' in message.text.lower()) and (message.from_user.username.lower() in ['loneloon', 'kejloon', self.admin.lower()]):
+            if ('stats' in message.text.lower()) and (
+                    message.from_user.username.lower() in ['loneloon', 'kejloon', self.admin.lower()]):
 
                 with open('json/spy.json', 'r', encoding='utf-8') as sd:
                     self.spy_data = json.load(sd)
@@ -200,14 +220,11 @@ class BotBase:
                 except:
                     self.report += f'Прошли тест:{0}/{0}\n\n'
 
-
                 for curator in self.q.table.keys():
                     self.report += f'{curator} {self.q.table[curator]}: \n'
                     for user, assig in self.spy_data.items():
                         if curator == assig:
                             self.report += f'@{user}\n'
-
-
 
                 bot.send_message(message.chat.id, f'❗СТАТИСТИКА❗\n{self.report}')
             elif 'ты здесь?' in message.text.lower():
@@ -263,8 +280,7 @@ class BotBase:
 
                                     bot.send_photo(message.chat.id, photo=open(f'photos/{coach}.jpg', 'rb'),
                                                    caption=reply[1],
-                                                     reply_markup=telebot.types.ReplyKeyboardRemove())
-
+                                                   reply_markup=telebot.types.ReplyKeyboardRemove())
 
                                     # json dump
 
@@ -273,12 +289,12 @@ class BotBase:
 
                                     if message.from_user.username is not None:
                                         self.spy_data[message.from_user.username] = coach
-                                        bot.send_message(chat_id=87829324, text=f"@{message.from_user.username} распределен к куратору {coach}!")
+                                        bot.send_message(chat_id=87829324,
+                                                         text=f"@{message.from_user.username} распределен к куратору {coach}!")
                                     else:
                                         self.spy_data[f"tg://user?id={message.from_user.id}"] = coach
                                         bot.send_message(chat_id=87829324,
                                                          text=f"tg://user?id={message.from_user.id} (без юзернэйма) распределен к куратору {coach}!")
-
 
                                     print(self.spy_data)
 
@@ -301,7 +317,12 @@ class BotBase:
 
                                     self.kb_2_inline(coaches)
 
-                                    bot.send_message(chat_id=message.chat.id, text=reply[1], reply_markup=self.inl_2)
+                                    with open('json/info.json', 'r', encoding='utf-8') as cur_i:
+                                        self.cur_info = json.load(cur_i)
+
+                                    bot.send_message(chat_id=message.chat.id, text=(reply[
+                                                                                        1] + f'\n\n{coaches[0]}:\n{self.cur_info[coaches[0]]}\n\n{coaches[1]}:\n{self.cur_info[coaches[1]]}'),
+                                                     reply_markup=self.inl_2)
 
                                 else:
                                     self.kb_1()
@@ -310,10 +331,9 @@ class BotBase:
                 except:
                     pass
 
-
         # main loop
 
-        bot.polling()
+        bot.polling(none_stop=True)
 
     def kb_1(self):
         self.keyboard1 = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -333,9 +353,7 @@ class BotBase:
             self.inl_2.add(telebot.types.InlineKeyboardButton(i, callback_data=i))
 
 
-
 while True:
-    try:
-        BotBase(token='1241217774:AAGrnbja0zr4dK1fIiEVe3SKwsTltyEL3K8')
-    except:
-        BotBase(token='1241217774:AAGrnbja0zr4dK1fIiEVe3SKwsTltyEL3K8')
+    t = Timer(till_restart, time_out)
+    t.start()
+    res()
