@@ -96,11 +96,11 @@ class BotBase:
 
                 if self.q.all[call.message.chat.id]['json'].from_user.username is not None:
                     self.spy_data[self.q.all[call.message.chat.id]['json'].from_user.username] = self.q.all[call.message.chat.id]['coach']
-                    bot.send_message(chat_id=847871905,
+                    bot.send_message(chat_id=87829324,
                                      text=f"@{self.q.all[call.message.chat.id]['json'].from_user.username} распределен к куратору {self.q.all[call.message.chat.id]['coach']}!")
                 else:
                     self.spy_data[f"tg://user?id={self.q.all[call.message.chat.id]['json'].from_user.id}"] = self.q.all[call.message.chat.id]['coach']
-                    bot.send_message(chat_id=847871905,
+                    bot.send_message(chat_id=87829324,
                                      text=f"tg://user?id={self.q.all[call.message.chat.id]['json'].from_user.id} (без юзернэйма) распределен к куратору {self.q.all[call.message.chat.id]['coach']}!")
 
                 print(self.spy_data)
@@ -273,10 +273,10 @@ class BotBase:
 
                                     if message.from_user.username is not None:
                                         self.spy_data[message.from_user.username] = coach
-                                        bot.send_message(chat_id=847871905, text=f"@{message.from_user.username} распределен к куратору {coach}!")
+                                        bot.send_message(chat_id=87829324, text=f"@{message.from_user.username} распределен к куратору {coach}!")
                                     else:
                                         self.spy_data[f"tg://user?id={message.from_user.id}"] = coach
-                                        bot.send_message(chat_id=847871905,
+                                        bot.send_message(chat_id=87829324,
                                                          text=f"tg://user?id={message.from_user.id} (без юзернэйма) распределен к куратору {coach}!")
 
 
