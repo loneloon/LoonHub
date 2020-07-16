@@ -98,8 +98,7 @@ class Quiz:
 
                     self.all[id]['answer'] = ''
 
-
-        else:
+        elif self.all[id]['level'] == 2:
             if not self.all[id]['waiting']:
                 counter = 1
                 self.keyboard2 = []
@@ -110,7 +109,6 @@ class Quiz:
                 with open('json/table.json', 'r', encoding='utf-8') as tb:
                     self.table = json.load(tb)
 
-                print(self.curators)
 
                 for mood, mentor in self.curators.items():
                     for key, val in mentor.items():
@@ -154,28 +152,57 @@ class Quiz:
                             with open('json/table.json', 'r', encoding='utf-8') as tb:
                                 self.table = json.load(tb)
 
-                            print(self.table)
-
                             with open('json/curators.json', 'r', encoding='utf-8') as ct:
                                 self.curators = json.load(ct)
 
-                            self.all[id]['coach'] = random.choice(value)
-                            while self.table[self.all[id]['coach']][0] == self.table[self.all[id]['coach']][1]:
-                                for mood, mentor in self.curators.items():
-                                    for key, val in mentor.items():
-                                        while self.all[id]['coach'] in val:
-                                            val.remove(self.all[id]['coach'])
-                                self.all[id]['coach'] = random.choice(value)
+                            self.all[id]['coach1'] = random.choice(value)
+                            while self.table[self.all[id]['coach1']][0] == self.table[self.all[id]['coach1']][1]:
+                                self.all[id]['coach1'] = random.choice(value)
 
-                            json.dump(self.curators, open('json/curators.json', 'w+', encoding='utf-8'), indent=2,
-                                      ensure_ascii=True)
+                            if len(value) > 1:
+                                self.all[id]['coach2'] = random.choice(value)
+                                while self.table[self.all[id]['coach2']][0] == self.table[self.all[id]['coach2']][1] or self.all[id]['coach2'] == self.all[id]['coach1']:
+                                    self.all[id]['coach2'] = random.choice(value)
 
-                            self.table[self.all[id]['coach']][0] += 1
-
-                            json.dump(self.table, open('json/table.json', 'w+', encoding='utf-8'), indent=2, ensure_ascii=True)
-
-                            self.q_out += f'Спасибо за ваши ответы! Вашим куратором будет {self.all[id]["coach"]}'
-
-                            print(self.curators)
+                            self.all[id]['level'] += 1
                             break
-                    return [self.all[id]["coach"], self.q_out]
+                    if self.all[id]['coach2'] != '':
+                        self.q_out += f'Выбери своего куратора:'
+                        return [[self.all[id]["coach1"], self.all[id]["coach2"]], self.q_out]
+                    else:
+                        self.q_out += f'Спасибо за ваши ответы!\nВашим куратором будет {self.all[id]["coach1"]}'
+                        return [self.all[id]["coach1"], self.q_out]
+        else:
+
+            if self.all[id]['answer'] != '' or self.all[id]['coach'] != '':
+                print('Куратор выбран')
+                for idx, (key, value) in enumerate(self.curators[self.all[id]['path']].items()):
+                    if (idx + 1) == int(self.all[id]['choice']):
+                        self.q_out = ''
+
+                        with open('json/table.json', 'r', encoding='utf-8') as tb:
+                            self.table = json.load(tb)
+
+                        with open('json/curators.json', 'r', encoding='utf-8') as ct:
+                            self.curators = json.load(ct)
+
+                        while self.table[self.all[id]['coach']][0] == self.table[self.all[id]['coach1']][1]:
+                            for mood, mentor in self.curators.items():
+                                for key, val in mentor.items():
+                                    while self.all[id]['coach'] in val:
+                                        val.remove(self.all[id]['coach'])
+
+                        json.dump(self.curators, open('json/curators.json', 'w+', encoding='utf-8'), indent=2,
+                                  ensure_ascii=True)
+
+                        self.table[self.all[id]['coach']][0] += 1
+
+                        print('Счет куратора обновлен!', self.table[self.all[id]['coach']][0])
+
+                        json.dump(self.table, open('json/table.json', 'w+', encoding='utf-8'), indent=2,
+                                  ensure_ascii=True)
+
+                        self.q_out += f'Спасибо за ваши ответы! Вашим куратором будет {self.all[id]["coach"]}'
+                        print(self.all[id]["coach"])
+                        break
+                return [self.all[id]["coach"], self.q_out]

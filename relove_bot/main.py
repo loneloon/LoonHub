@@ -70,6 +70,75 @@ class BotBase:
         def send_help(message):
             bot.send_message(message.chat.id, self.help)
 
+        @bot.callback_query_handler(func=lambda call: True)
+        def callback_inline(call):
+            print('Сработал хэндлер')
+
+            print(call.data)
+
+            if call.message:
+                if call.data == self.q.all[call.message.chat.id]['coach1']:
+                    self.q.all[call.message.chat.id]['coach'] = self.q.all[call.message.chat.id]['coach1']
+                elif call.data == self.q.all[call.message.chat.id]['coach2']:
+                    self.q.all[call.message.chat.id]['coach'] = self.q.all[call.message.chat.id]['coach2']
+
+                self.q.ask_back(id=call.message.chat.id)
+                edit_message_callback(call, self.q.all[call.message.chat.id]['coach'])
+
+                bot.send_photo(call.message.chat.id, photo=open(f'photos/{self.q.all[call.message.chat.id]["coach"]}.jpg', 'rb'),
+                               caption=f"Спасибо за ваши ответы!\nВашим куратором будет {self.q.all[call.message.chat.id]['coach']}",
+                               reply_markup=telebot.types.ReplyKeyboardRemove())
+
+                # json dump
+
+                with open('json/spy.json', 'r', encoding='utf-8') as sd:
+                    self.spy_data = json.load(sd)
+
+                if self.q.all[call.message.chat.id]['json'].from_user.username is not None:
+                    self.spy_data[self.q.all[call.message.chat.id]['json'].from_user.username] = self.q.all[call.message.chat.id]['coach']
+                    bot.send_message(chat_id=847871905,
+                                     text=f"@{self.q.all[call.message.chat.id]['json'].from_user.username} распределен к куратору {self.q.all[call.message.chat.id]['coach']}!")
+                else:
+                    self.spy_data[f"tg://user?id={self.q.all[call.message.chat.id]['json'].from_user.id}"] = self.q.all[call.message.chat.id]['coach']
+                    bot.send_message(chat_id=847871905,
+                                     text=f"tg://user?id={self.q.all[call.message.chat.id]['json'].from_user.id} (без юзернэйма) распределен к куратору {self.q.all[call.message.chat.id]['coach']}!")
+
+                print(self.spy_data)
+
+                json.dump(self.spy_data, open('json/spy.json', 'w+', encoding='utf-8'), indent=2,
+                          ensure_ascii=True)
+
+                self.q.all[call.message.chat.id]['run'] = False
+
+                del self.q.all[call.message.chat.id]
+                print(self.q.table)
+
+                with open('json/spy.json', 'r', encoding='utf-8') as sd:
+                    self.spy_data = json.load(sd)
+
+                bot.send_message(call.message.chat.id,
+                                 f'Если у Вас остались какие-либо вопросы, наш администратор @{self.admin} с радостью на них ответит!')
+
+
+        def edit_message_callback(call, sel):
+            if call.message:
+                bot.edit_message_text(
+                    text=f'Выберите куратора:\n✅{sel}',
+                    chat_id=call.message.chat.id,
+                    message_id=call.message.message_id,
+                    reply_markup=telebot.types.InlineKeyboardMarkup(),
+                    parse_mode='HTML'
+                )
+            elif call.inline_message_id:
+                bot.edit_message_text(
+                    text=f'Выберите куратора:\n✅{sel}',
+                    inline_message_id=call.inline_message_id,
+                    reply_markup=telebot.types.InlineKeyboardMarkup(),
+                    parse_mode='HTML'
+                )
+
+
+
 
         @bot.message_handler(commands=['quiz'])
         def quiz_thread(message):
@@ -101,7 +170,7 @@ class BotBase:
             else:
 
                 self.q.all[message.chat.id] = {'level': 0, 'path': '', 'waiting': False, 'choice': None, 'answer': '',
-                                               'run': False, 'coach': ''}
+                                               'run': False, 'coach': '', 'coach1': '', 'coach2': '', 'json': message}
                 self.q.all[message.chat.id]['run'] = True
 
                 self.kb_1()
@@ -110,8 +179,6 @@ class BotBase:
 
         @bot.message_handler(content_types=['text'])
         def send_text(message):
-
-
 
 
             if ('stats' in message.text.lower()) and (message.from_user.username.lower() in ['loneloon', 'kejloon', self.admin.lower()]):
@@ -206,9 +273,11 @@ class BotBase:
 
                                     if message.from_user.username is not None:
                                         self.spy_data[message.from_user.username] = coach
+                                        bot.send_message(chat_id=847871905, text=f"@{message.from_user.username} распределен к куратору {coach}!")
                                     else:
                                         self.spy_data[f"tg://user?id={message.from_user.id}"] = coach
-                                        bot.send_message(chat_id=847871905, text=f"tg://user?id={message.from_user.id} (без юзернэйма) распределен к куратору {coach}!")
+                                        bot.send_message(chat_id=847871905,
+                                                         text=f"tg://user?id={message.from_user.id} (без юзернэйма) распределен к куратору {coach}!")
 
 
                                     print(self.spy_data)
@@ -226,6 +295,14 @@ class BotBase:
 
                                     bot.send_message(message.chat.id,
                                                      f'Если у Вас остались какие-либо вопросы, наш администратор @{self.admin} с радостью на них ответит!')
+                                elif type(reply) == list and type(reply[0]) == list:
+
+                                    coaches = reply[0]
+
+                                    self.kb_2_inline(coaches)
+
+                                    bot.send_message(chat_id=message.chat.id, text=reply[1], reply_markup=self.inl_2)
+
                                 else:
                                     self.kb_1()
 
@@ -250,10 +327,12 @@ class BotBase:
         for i in self.q.keyboard2:
             self.keyboard2.add(i)
 
-    def kb_2_inline(self):
+    def kb_2_inline(self, coaches):
         self.inl_2 = telebot.types.InlineKeyboardMarkup()
-        for i in self.q.keyboard2:
-            self.inl_2.row(telebot.types.InlineKeyboardButton(i, callback_data=i))
+        for i in coaches:
+            self.inl_2.add(telebot.types.InlineKeyboardButton(i, callback_data=i))
+
+
 
 while True:
     try:
