@@ -51,11 +51,19 @@ class BotBase:
 
             bot.send_message(message.chat.id, self.greeting)
 
+            print(message.chat.id)
 
-            if message.from_user.username not in self.spy_data.keys():
-                self.spy_data[message.from_user.username] = ""
+            if message.from_user.username is not None:
+                if message.from_user.username not in self.spy_data.keys():
+                    self.spy_data[message.from_user.username] = ""
 
-                json.dump(self.spy_data, open('json/spy.json', 'w+', encoding='utf-8'), indent=2,
+                    json.dump(self.spy_data, open('json/spy.json', 'w+', encoding='utf-8'), indent=2,
+                              ensure_ascii=True)
+            else:
+                if f"tg://user?id={message.from_user.id}" not in self.spy_data.keys():
+                    self.spy_data[f"tg://user?id={message.from_user.id}"] = ""
+
+                    json.dump(self.spy_data, open('json/spy.json', 'w+', encoding='utf-8'), indent=2,
                           ensure_ascii=True)
 
         @bot.message_handler(commands=['help'])
@@ -66,17 +74,25 @@ class BotBase:
         @bot.message_handler(commands=['quiz'])
         def quiz_thread(message):
 
+            with open('json/spy.json', 'r', encoding='utf-8') as sd:
+                self.spy_data = json.load(sd)
 
             coach = ''
 
-            self.kb_1()
 
             try:
-                if self.spy_data[message.from_user.username] != "":
-                    coach = self.spy_data[message.from_user.username]
-                    self.tested = True
+                if message.from_user.username is not None:
+                    if self.spy_data[message.from_user.username] != "":
+                        coach = self.spy_data[message.from_user.username]
+                        self.tested = True
+                    else:
+                        self.tested = False
                 else:
-                    self.tested = False
+                    if self.spy_data[f"tg://user?id={message.from_user.id}"] != "":
+                        coach = self.spy_data[f"tg://user?id={message.from_user.id}"]
+                        self.tested = True
+                    else:
+                        self.tested = False
             except:
                 self.tested = False
 
@@ -88,12 +104,14 @@ class BotBase:
                                                'run': False, 'coach': ''}
                 self.q.all[message.chat.id]['run'] = True
 
+                self.kb_1()
+
                 bot.send_message(message.chat.id, self.q.ask_back(id=message.chat.id), reply_markup=self.keyboard1)
 
         @bot.message_handler(content_types=['text'])
         def send_text(message):
 
-            self.kb_1()
+
 
 
             if ('stats' in message.text.lower()) and (message.from_user.username.lower() in ['loneloon', 'kejloon', self.admin.lower()]):
@@ -145,8 +163,12 @@ class BotBase:
                                     bot.send_message(message.chat.id, reply, reply_markup=self.keyboard2)
                                 else:
 
+                                    self.kb_1()
+
                                     bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
                             else:
+
+                                self.kb_1()
 
                                 bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
 
@@ -164,6 +186,8 @@ class BotBase:
                                     bot.send_message(message.chat.id, reply, reply_markup=self.keyboard2)
 
                                 else:
+                                    self.kb_1()
+
                                     bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
                             else:
                                 if type(reply) == list and type(reply[0]) == str:
@@ -180,7 +204,12 @@ class BotBase:
                                     with open('json/spy.json', 'r', encoding='utf-8') as sd:
                                         self.spy_data = json.load(sd)
 
-                                    self.spy_data[message.from_user.username] = coach
+                                    if message.from_user.username is not None:
+                                        self.spy_data[message.from_user.username] = coach
+                                    else:
+                                        self.spy_data[f"tg://user?id={message.from_user.id}"] = coach
+                                        bot.send_message(chat_id=847871905, text=f"tg://user?id={message.from_user.id} (без юзернэйма) распределен к куратору {coach}!")
+
 
                                     print(self.spy_data)
 
@@ -192,9 +221,14 @@ class BotBase:
                                     del self.q.all[message.chat.id]
                                     print(self.q.table)
 
+                                    with open('json/spy.json', 'r', encoding='utf-8') as sd:
+                                        self.spy_data = json.load(sd)
+
                                     bot.send_message(message.chat.id,
                                                      f'Если у Вас остались какие-либо вопросы, наш администратор @{self.admin} с радостью на них ответит!')
                                 else:
+                                    self.kb_1()
+
                                     bot.send_message(message.chat.id, reply, reply_markup=self.keyboard1)
                 except:
                     pass
@@ -205,8 +239,7 @@ class BotBase:
         bot.polling()
 
     def kb_1(self):
-        self.keyboard1 = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True,
-                                                           one_time_keyboard=True)
+        self.keyboard1 = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 
         self.keyboard1.row('Да', 'Нет')
 
