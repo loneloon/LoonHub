@@ -8,7 +8,7 @@ till_restart = 60
 
 token='1271548938:AAGIVXqquLWCAcwyolSwNr5RDcIYvMmQrc4'
 
-bot = telebot.TeleBot(token)
+bot = telebot.TeleBot(token=token, threaded=False)
 
 def time_out():
     global till_restart
@@ -333,7 +333,7 @@ class BotBase:
 
         # main loop
 
-        bot.polling(none_stop=True)
+        bot.polling()
 
     def kb_1(self):
         self.keyboard1 = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
