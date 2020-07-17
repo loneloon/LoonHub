@@ -13,7 +13,7 @@ bot = telebot.TeleBot(token=token, threaded=False)
 def time_out():
     global till_restart
     bot.stop_polling()
-    time.sleep(5)
+    time.sleep(3)
 
 
 def res():
