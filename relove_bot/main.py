@@ -6,7 +6,7 @@ import time
 
 till_restart = 60
 
-token='1271548938:AAGIVXqquLWCAcwyolSwNr5RDcIYvMmQrc4'
+token='*'
 
 bot = telebot.TeleBot(token=token, threaded=False)
 
