@@ -6,7 +6,7 @@ import time
 
 till_restart = 60
 
-token='*'
+token='1271548938:AAGIVXqquLWCAcwyolSwNr5RDcIYvMmQrc4'
 
 bot = telebot.TeleBot(token=token, threaded=False)
 
@@ -33,6 +33,7 @@ class BotBase:
 
         # self.activated = False
 
+        self.test_allowed = False
         self.admin = 'Korobkovochka'
         self.greeting = '''
         Привет!
@@ -61,6 +62,14 @@ class BotBase:
 
 Если у тебя возникли вопросы, на которые я не могу ответить:
 наш администратор @{self.admin} с радостью на них ответит!
+        '''
+
+        self.closed_message =  f'''
+        
+На данный момент распределение к кураторам завершено!
+
+Если Вы по какой-либо причине не попали в распределение, наш администратор @{self.admin} с радостью ответит на Ваши вопросы!
+
         '''
 
         self.q = quiz.Quiz()
@@ -163,39 +172,41 @@ class BotBase:
 
         @bot.message_handler(commands=['quiz'])
         def quiz_thread(message):
+            if self.test_allowed:
+                with open('json/spy.json', 'r', encoding='utf-8') as sd:
+                    self.spy_data = json.load(sd)
 
-            with open('json/spy.json', 'r', encoding='utf-8') as sd:
-                self.spy_data = json.load(sd)
+                coach = ''
 
-            coach = ''
-
-            try:
-                if message.from_user.username is not None:
-                    if self.spy_data[message.from_user.username] != "":
-                        coach = self.spy_data[message.from_user.username]
-                        self.tested = True
+                try:
+                    if message.from_user.username is not None:
+                        if self.spy_data[message.from_user.username] != "":
+                            coach = self.spy_data[message.from_user.username]
+                            self.tested = True
+                        else:
+                            self.tested = False
                     else:
-                        self.tested = False
+                        if self.spy_data[f"tg://user?id={message.from_user.id}"] != "":
+                            coach = self.spy_data[f"tg://user?id={message.from_user.id}"]
+                            self.tested = True
+                        else:
+                            self.tested = False
+                except:
+                    self.tested = False
+
+                if self.tested:
+                    bot.send_message(message.chat.id, f'Вы уже выбрали куратора! Ваш куратор: {coach}')
                 else:
-                    if self.spy_data[f"tg://user?id={message.from_user.id}"] != "":
-                        coach = self.spy_data[f"tg://user?id={message.from_user.id}"]
-                        self.tested = True
-                    else:
-                        self.tested = False
-            except:
-                self.tested = False
 
-            if self.tested:
-                bot.send_message(message.chat.id, f'Вы уже выбрали куратора! Ваш куратор: {coach}')
+                    self.q.all[message.chat.id] = {'level': 0, 'path': '', 'waiting': False, 'choice': None, 'answer': '',
+                                                   'run': False, 'coach': '', 'coach1': '', 'coach2': '', 'json': message}
+                    self.q.all[message.chat.id]['run'] = True
+
+                    self.kb_1()
+
+                    bot.send_message(message.chat.id, self.q.ask_back(id=message.chat.id), reply_markup=self.keyboard1)
             else:
-
-                self.q.all[message.chat.id] = {'level': 0, 'path': '', 'waiting': False, 'choice': None, 'answer': '',
-                                               'run': False, 'coach': '', 'coach1': '', 'coach2': '', 'json': message}
-                self.q.all[message.chat.id]['run'] = True
-
-                self.kb_1()
-
-                bot.send_message(message.chat.id, self.q.ask_back(id=message.chat.id), reply_markup=self.keyboard1)
+                bot.send_message(message.chat.id, self.closed_message, reply_markup=telebot.types.ReplyKeyboardRemove())
 
         @bot.message_handler(content_types=['text'])
         def send_text(message):

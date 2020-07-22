@@ -1,6 +1,7 @@
 import random, json
 import telebot
 
+
 class Quiz:
 
     def __init__(self):
@@ -30,7 +31,6 @@ class Quiz:
         # 'Дима': [0, 3],
         # 'Вероника': [0, 3],
         # }
-
 
         # self.selected_coach = None
 
@@ -109,7 +109,6 @@ class Quiz:
                 with open('json/table.json', 'r', encoding='utf-8') as tb:
                     self.table = json.load(tb)
 
-
                 for mood, mentor in self.curators.items():
                     for key, val in mentor.items():
                         for person in val:
@@ -125,10 +124,8 @@ class Quiz:
                         self.keyboard2.append(str(counter))
                     counter += 1
 
-
                     # else:
                     #     del self.curators[self.all[id]['path']][key]
-
 
                 json.dump(self.curators, open('json/curators.json', 'w+', encoding='utf-8'), indent=2,
                           ensure_ascii=True)
@@ -161,7 +158,8 @@ class Quiz:
 
                             if len(value) > 1:
                                 self.all[id]['coach2'] = random.choice(value)
-                                while self.table[self.all[id]['coach2']][0] == self.table[self.all[id]['coach2']][1] or self.all[id]['coach2'] == self.all[id]['coach1']:
+                                while self.table[self.all[id]['coach2']][0] == self.table[self.all[id]['coach2']][1] or \
+                                        self.all[id]['coach2'] == self.all[id]['coach1']:
                                     self.all[id]['coach2'] = random.choice(value)
 
                             self.all[id]['level'] += 1
@@ -170,8 +168,20 @@ class Quiz:
                         self.q_out += f'Выбери своего куратора:'
                         return [[self.all[id]["coach1"], self.all[id]["coach2"]], self.q_out]
                     else:
+
+                        with open('json/table.json', 'r', encoding='utf-8') as tb:
+                            self.table = json.load(tb)
+
+                        self.table[self.all[id]['coach1']][0] += 1
+
+                        print('Счет куратора обновлен!', self.table[self.all[id]['coach1']][0])
+
+                        json.dump(self.table, open('json/table.json', 'w+', encoding='utf-8'), indent=2,
+                                  ensure_ascii=True)
+
                         self.q_out += f'Спасибо за ваши ответы!\nВашим куратором будет {self.all[id]["coach1"]}'
                         return [self.all[id]["coach1"], self.q_out]
+
         else:
 
             if self.all[id]['answer'] != '' or self.all[id]['coach'] != '':
