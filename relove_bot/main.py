@@ -1,12 +1,15 @@
 import telebot
 import quiz
 import json
-from threading import Timer
+from threading import Timer, Thread
 import time
+from notify import Notifications
 
 till_restart = 60
 
-token='*'
+token='1241217774:AAGrnbja0zr4dK1fIiEVe3SKwsTltyEL3K8'
+
+group_chat_id = '-1001345760567'
 
 bot = telebot.TeleBot(token=token, threaded=False)
 
@@ -21,6 +24,10 @@ def res():
     try:
         BotBase()
     except:
+        # ask loon for help
+        bot.send_sticker('847871905', 'CAACAgEAAxkBAAIQOF82Kbfm2zIll3SefJcjc3X2QBm3AAJXBwACkSkAARDY2sCkSRHN3xoE')
+        bot.send_message('847871905', 'help')
+        # ask kej for help
         BotBase()
 
 
@@ -29,7 +36,9 @@ class BotBase:
 
     def __init__(self):
 
+        # self.group_chat_id = '-1001345760567'
 
+        # self.notifier = Notifications(bot=bot, chat_id=self.group_chat_id)
 
         # self.activated = False
 
@@ -208,8 +217,27 @@ class BotBase:
             else:
                 bot.send_message(message.chat.id, self.closed_message, reply_markup=telebot.types.ReplyKeyboardRemove())
 
+        @bot.message_handler(content_types=['sticker'])
+        def sticker_id(message):
+            print(message.file_id)
+
         @bot.message_handler(content_types=['text'])
         def send_text(message):
+
+            if 'chat_id' in message.text and (
+                    message.from_user.username.lower() in ['loneloon', 'kejloon']):
+                print(message.chat.id)
+
+            if 'clocks?' in message.text and (
+                    message.from_user.username.lower() in ['loneloon', 'kejloon']):
+                if notifier_thread.is_alive():
+
+                    got_clocks = 'Список активных уведомлений:\n\n'
+                    for clock, notification in notifier.timers.items():
+                        got_clocks += f'[{clock}]: {notification}\n'
+                    bot.send_message(message.chat.id, got_clocks)
+                else:
+                    bot.send_message(message.chat.id, 'Уведомлений нет.')
 
             if ('stats' in message.text.lower()) and (
                     message.from_user.username.lower() in ['loneloon', 'kejloon', self.admin.lower()]):
@@ -342,6 +370,7 @@ class BotBase:
                 except:
                     pass
 
+
         # main loop
 
         bot.polling()
@@ -363,6 +392,10 @@ class BotBase:
         for i in coaches:
             self.inl_2.add(telebot.types.InlineKeyboardButton(i, callback_data=i))
 
+
+notifier = Notifications(bot, group_chat_id)
+notifier_thread = Thread(target=notifier.check_send)
+notifier_thread.start()
 
 while True:
     t = Timer(till_restart, time_out)
