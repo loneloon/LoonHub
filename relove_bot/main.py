@@ -7,7 +7,7 @@ from notify import Notifications
 
 till_restart = 60
 
-token='1241217774:AAGrnbja0zr4dK1fIiEVe3SKwsTltyEL3K8'
+token='*'
 
 group_chat_id = '-1001345760567'
 
@@ -28,6 +28,9 @@ def res():
         bot.send_sticker('847871905', 'CAACAgEAAxkBAAIQOF82Kbfm2zIll3SefJcjc3X2QBm3AAJXBwACkSkAARDY2sCkSRHN3xoE')
         bot.send_message('847871905', 'help')
         # ask kej for help
+        bot.send_sticker('365571785', 'CAACAgEAAxkBAAIQOF82Kbfm2zIll3SefJcjc3X2QBm3AAJXBwACkSkAARDY2sCkSRHN3xoE')
+        bot.send_message('365571785', 'help')
+        
         BotBase()
 
 
@@ -217,9 +220,6 @@ class BotBase:
             else:
                 bot.send_message(message.chat.id, self.closed_message, reply_markup=telebot.types.ReplyKeyboardRemove())
 
-        @bot.message_handler(content_types=['sticker'])
-        def sticker_id(message):
-            print(message.file_id)
 
         @bot.message_handler(content_types=['text'])
         def send_text(message):
