@@ -304,16 +304,17 @@ class Main:
         def HistoryUpdate():
             global hist_temp, chat_feed
 
-            hist_temp = ['\n']
+            hist_temp = '\n'
 
             with open("chat_history", "r") as h:
                 tot = len(h.readlines())
             with open("chat_history", "r") as h:
                 for idx, i in enumerate(h.readlines()):
-                    hist_temp.append(i)
+                    if tot <= 10 or (idx in range(tot-10, tot)):
+                        hist_temp += f"\r{i}"
             h.close()
 
-            chat_feed = prim_decode("\r".join(hist_temp))
+            chat_feed = prim_decode(hist_temp)
 
         def Send():
             global message_sent, time_sent, chat_feed, user_input, token, print_cash
